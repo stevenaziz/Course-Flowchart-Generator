@@ -9,8 +9,8 @@
 
 <body>
 <header>Course Flowchart Generator</header>
-
 <p>Please ensure that your selections meet the following criterial</p>
+
 <ul>
   <li>The file must be a .txt</li>
   <li>Each line in the file corresponds with one required class</li>
@@ -21,19 +21,33 @@
   <li>[prerequisite_classes] must be in the format [course1_code], [course2_code], ...</li>
   <li>[course_availability] is in the format [X], [Y], ... where X and Y represent {1, 2, 3} for each quarter in a typical year the course is offered</li>
   <li>[prerequisite_classes] may be empty [] if there are no prerequisite classes</li>
+  <br>
   <li>
     The final format should look like the following<br>
     EGR 2200, Engineering Probability & Stats, 3, [MAT 1235], [2, 3]
   </li>
 </ul>
 
-<form action="">
-  <input type="file" name="" id="" accept=".txt">
-  <input type="number" name="" id="">
-  <input type="number" name="" id="">
-  <input type="submit" value="">
+<form>
+  <label for="major-reqs">Requirements File</label>
+  <input type="file" name="major-reqs" id="major-reqs" accept=".txt" required>
+  <br>
+  <label for="max-credits">Max Credits Per Quarter</label>
+  <input type="number" name="max-credits" id="max-credits" min="5" step="1" placeholder="15" required>
+  <br>
+  <label>Starting Quarter</label>
+  <br>
+  <input type="radio" name="start-qtr" id="autumn" value="1" required>
+  <label for="autumn">Autumn</label>
+  <br>
+  <input type="radio" name="start-qtr" id="winter" value="2" required>
+  <label for="winter">Winter</label>
+  <br>
+  <input type="radio" name="start-qtr" id="spring" value="3" required>
+  <label for="spring">Spring</label>
+  <br><br>
+  <button type="submit" id="submit-btn">Submit</button>
 </form>
-
 
 <div id="mynetwork">
   <div class="division" id="Freshmen-Yr"></div>
@@ -42,20 +56,20 @@
   <div class="division" id="Senior-Yr"></div>
 </div>
 
+<script src="/vis-network.min.js"></script>
+<script src="/script.js"></script>
 
-
-<script type="text/javascript" src="/vis-network.min.js"></script>
 <script>
   // create an array with nodes
   var nodes = new vis.DataSet([
-      {id: 1230, label: 'CSC 1230 \n 5cr', shape: 'circle', title: 'Introduction to Computer Science', color: 'green'},
+      {id: 1230, label: 'CSC 1230 \n 5cr', shape: 'circle', title: 'Introduction to Computer Science'},
       {id: 2430, label: 'CSC 2430 \n 5cr', shape: 'circle', title: 'Data Structures I'},
       {id: 2431, label: 'CSC 2431 \n 5cr', shape: 'circle', title: 'Data Structures II'},
-      {id: 1010, label: 'MAT 1010 \n 3cr', shape: 'oval', title: 'College Algebra'},
-      {id: 1221, label: 'MAT 1221 \n 5cr', shape: 'oval', title: 'Survey of Calculus'},
+      {id: 1010, label: 'MAT 1010 \n 3cr', shape: 'circle', title: 'College Algebra'},
+      {id: 1221, label: 'MAT 1221 \n 5cr', shape: 'circle', title: 'Survey of Calculus'},
       {id: 3220, label: 'CSC 3220 \n 4cr', shape: 'circle', title: 'Application Programming'},
-      {id: 1720, label: 'MAT 1720 \n 5cr', shape: 'oval', title: 'Conputer Science Math'},
-      {id: 2360, label: 'MAT 2360 \n 5cr', shape: 'oval', title: 'Introduction to Statistics'},
+      {id: 1720, label: 'MAT 1720 \n 5cr', shape: 'circle', title: 'Conputer Science Math'},
+      {id: 2360, label: 'MAT 2360 \n 5cr', shape: 'circle', title: 'Introduction to Statistics'},
       {id: 3221, label: 'CSC 3221 \n 4cr', shape: 'circle', title: 'Netcentric Computing'},
       {id: 3150, label: 'CSC 3150 \n 5cr', shape: 'circle', title: 'Systems Design'},
       {id: 3310, label: 'CSC 3310 \n 4cr', shape: 'circle', title: 'Programming Languages'},
@@ -65,13 +79,13 @@
       {id: 4410, label: 'CSC 4410 \n 5cr', shape: 'circle', title: 'Database Management'},
       {id: 4151, label: 'CSC 4151 \n 3cr', shape: 'circle', title: 'Software Engineering I'},
       {id: 4152, label: 'CSC 4152 \n 3cr', shape: 'circle', title: 'Software Engineering II'},
-      {id: 1000, label: 'UFDN 1000 \n 5cr', shape: 'oval', title: 'University Foundation', color: 'green'},
-      {id: 0145, label: 'MAT 0145 \n 3cr', shape: 'oval', title: 'College Readiness Math II', color: 'green'},
+      {id: 1000, label: 'UFDN 1000 \n 5cr', shape: 'circle', title: 'University Foundation'},
+      {id: 0145, label: 'MAT 0145 \n 3cr', shape: 'circle', title: 'College Readiness Math II'},
       {id: 3000, label: 'CSC 3000 \n 1cr', shape: 'circle', title: 'Principles of Professional Practice'},
       {id: 3011, label: 'CSC 3011 \n 3cr', shape: 'circle', title: 'Digital Writing'},
       {id: 4898, label: 'CSC 4898 \n 2cr', shape: 'circle', title: 'Senior Capstone'},
       {id: 4941, label: 'CSC 4941 \n 1cr', shape: 'circle', title: 'Computer Science Internship Review'},
-      {id: 2000, label: 'UFDN 2000 \n 5cr', shape: 'circle', title: 'Christian Scriptures', color: 'green'}
+      {id: 2000, label: 'UFDN 2000 \n 5cr', shape: 'circle', title: 'Christian Scriptures'}
   ]);
 
   // create an array with edges
@@ -116,7 +130,6 @@
   width: '100%',
   height: '700px',
   interaction: {
-    
     zoomView: false
   },
   layout: {

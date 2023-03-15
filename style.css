@@ -1,15 +1,27 @@
-  header {
-    font: bold 32px arial;
-  }
+body {
+  padding: 2vmin;
+}
 
-  p {
-    font: bold 20px arial;
-  }
+header {
+  font: bold 32px arial;
+}
 
-  li {
-    font: 16px arial
-  }
-  
+p {
+  font: bold 18px arial;
+}
+
+li {
+  font: 16px arial;
+}
+
+label {
+  font: 16px arial;
+}
+
+input {
+  margin: 10px 0;
+}
+
 .graph-parent {
   width: 700px; /* set the width of the parent element */
   height: 200px; /* set the height of the parent element */
