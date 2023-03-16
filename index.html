@@ -60,72 +60,106 @@
 <script src="script.js"></script>
 
 <script>
-  // create an array with nodes
-  var nodes = new vis.DataSet([
-      {id: 1230, label: 'CSC 1230 \n 5cr', shape: 'circle', title: 'Introduction to Computer Science'},
-      {id: 2430, label: 'CSC 2430 \n 5cr', shape: 'circle', title: 'Data Structures I'},
-      {id: 2431, label: 'CSC 2431 \n 5cr', shape: 'circle', title: 'Data Structures II'},
-      {id: 1010, label: 'MAT 1010 \n 3cr', shape: 'circle', title: 'College Algebra'},
-      {id: 1221, label: 'MAT 1221 \n 5cr', shape: 'circle', title: 'Survey of Calculus'},
-      {id: 3220, label: 'CSC 3220 \n 4cr', shape: 'circle', title: 'Application Programming'},
-      {id: 1720, label: 'MAT 1720 \n 5cr', shape: 'circle', title: 'Conputer Science Math'},
-      {id: 2360, label: 'MAT 2360 \n 5cr', shape: 'circle', title: 'Introduction to Statistics'},
-      {id: 3221, label: 'CSC 3221 \n 4cr', shape: 'circle', title: 'Netcentric Computing'},
-      {id: 3150, label: 'CSC 3150 \n 5cr', shape: 'circle', title: 'Systems Design'},
-      {id: 3310, label: 'CSC 3310 \n 4cr', shape: 'circle', title: 'Programming Languages'},
-      {id: 3430, label: 'CSC 3430 \n 4cr', shape: 'circle', title: 'Algorithms Design and Analysis'},
-      {id: 3750, label: 'CSC 3750 \n 5cr', shape: 'circle', title: 'Computer Archicture'},
-      {id: 3350, label: 'CSC 3350 \n 3cr', shape: 'circle', title: 'Operating Systems'},
-      {id: 4410, label: 'CSC 4410 \n 5cr', shape: 'circle', title: 'Database Management'},
-      {id: 4151, label: 'CSC 4151 \n 3cr', shape: 'circle', title: 'Software Engineering I'},
-      {id: 4152, label: 'CSC 4152 \n 3cr', shape: 'circle', title: 'Software Engineering II'},
-      {id: 1000, label: 'UFDN 1000 \n 5cr', shape: 'circle', title: 'University Foundation'},
-      {id: 0145, label: 'MAT 0145 \n 3cr', shape: 'circle', title: 'College Readiness Math II'},
-      {id: 3000, label: 'CSC 3000 \n 1cr', shape: 'circle', title: 'Principles of Professional Practice'},
-      {id: 3011, label: 'CSC 3011 \n 3cr', shape: 'circle', title: 'Digital Writing'},
-      {id: 4898, label: 'CSC 4898 \n 2cr', shape: 'circle', title: 'Senior Capstone'},
-      {id: 4941, label: 'CSC 4941 \n 1cr', shape: 'circle', title: 'Computer Science Internship Review'},
-      {id: 2000, label: 'UFDN 2000 \n 5cr', shape: 'circle', title: 'Christian Scriptures'}
-  ]);
+  //dataInt will be the array of INTS you provide to collect course codes e.g "1230, 2430"
+  //dataName will be the array of STRINGS with courseCode that shows up on the node " CSC 1230, CSC 2430"
+  //dataTitle will be the array of STRINGS with courseName that shows up when you hover over the node "Introdcuation to programming"
+  //DataCredits will be the array of INTS with credits for each course shows up on new line of the node " Credits: 5"
+  //prereqIDs should be an array of INTS you provide that will create edges. THIS  IS THE MOST IMPORTANT ARRAY THAT PROVES IF THIS FUNCTION WORKS
+      //PrereqIDS should look almost like dataInt but this time the arrangement represents the prerequisite contraints, 
+      //like the connection between intro to programming and data structures 1 in the array is just a list "1230, 2430" just like any other array of strings,
+      // the next thing after 2 ids should represent a connection rereqIDs contains "1230, 2430, 4430, 4457, 0975, 7348..."
+          //then the edges from my function that uses this data should create edges like
+          //from 1230 to 2430
+          //from 4430 to 4457 
+             //and NOT from 1230 to 2430
+             //then 2430 to 4457
+// second instance will be well avoided if prereqIDs array is well arranged
+//availability is for when the courses are available as we already know it just was to have a list of arrays at at index=1 , if available in fall and winter, availability at [1] should have 1,2!
 
-  // create an array with edges
-  var edges = new vis.DataSet([
-  {from: 1221, to: 1720, arrows:{to: true}},
-  {from: 1010, to: 1221, arrows: {to: true}},
-  {from: 1230, to: 2430, arrows: {to: true}},
-  {from: 2430, to: 2431, arrows: {to: true}},
-  {from: 2430, to: 3220, arrows: {to: true}},
-  {from: 2430, to: 3150, arrows: {to: true}},
+  //Number1. this is a function that takes in defined parameters to creat a graph
+  //does number 1 and 3 in chat 
+  function EntireGraphCreator (dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability ) {// graphCreator 
+    var nodes= [];
+    var edges= [];
+    for (var i=0,i<dataInt.length, i++){// node creator 
+      var node ={
+        id: dataInt[i];
+        group: [availability[i]],// the extra brackets allow courses that are offered in more than one group to have more than one array and those with 1 work just perfectly as well
+        label: dataName[i]+ "\n Credits: " + dataCredits[i],
+        title: dataTitle[i]
+      };
+      nodes.push[node];
+    }
+    for (var i=0; i<prereqIDs.length; i+=2){// edge creator
+      var edge = {
+        from:prereqIDs[i].from,
+        to:prereqIDs[i+1].to,
+        label: prereqIDs[i].label
+      };
+      edges.push[edge];
+    }
+    return{ // total graph creator
+      nodes: new vis.DataSet{nodes}; // graph 
+      edges: new vis.DataSet(edges);
+    };
+  }
+  // group Graph creator was the trickiest to fathom
+  //its almost like the regular graph but now it cares about the group part of the node based off availability
+  // since availability could be "1" or both "1,2" or "1,2,3" its variable should be able to take in which ever value or values and clust single groups or groups with groups
+  // it definitely might have a way it could be optimized but for now I wanted to get the logic clear for us first
+  // "groupies" is what the client would want to see is available for courses in graph form
+  // if a client wants to see groupies = 1, a graph for whatever is available in fall, will be produced, and same goes if the value for groupies is "1,2"
   
-  {from: 2431, to: 3310, arrows: {to: true}},
-  {from: 3221, to: 3000, arrows: {to: true}},
-  {from: 1720, to: 3310, arrows: {to: true}},
-  {from: 3220, to: 3221, arrows: {to: true}},
-  {from: 3220, to: 3150, arrows: {to: true}},
-  {from: 2360, to: 3430, arrows: {to: true}},
-  {from: 3150, to: 4410, arrows: {to: true}},
-  {from: 3150, to: 4151, arrows: {to: true}},
-  {from: 3430, to: 3350, arrows: {to: true}},
-  {from: 3011, to: 4898, arrows: {to: true}},
-  {from: 3310, to: 3430, arrows: {to: true}},
-  {from: 3750, to: 4151, arrows: {to:true}},
-  {from: 4151, to: 4152, arrows: {to: true}},
-  {from: 3011, to: 4941, arrows: {to: true}},
-  {from: 3350, to: 4898, arrows: {to: true}},
-  
-  {from: 0145, to: 1010, arrows: {to: true}},
-  {from: 3000, to: 4898, arrows: {to: true}},
-  {from: 3011, to: 4941, arrows: {to: true}},
-  {from: 1000, to: 2000, arrows: {to: true}},
-  {from: 2000, to: 2431, arrows: {to: true}}
-  
-  ]);
+// Number 2. this is the function that takes in defined parameter groupies which could be "1" or "2" or "3" or "1,2" or "1,3" or" 2,3 " or "1,2,3" basically i would describe it as an array of arrays is a possible groupies value I THINK
+// does Number 2 and 3 in chat
+  function GroupGraphCreator (dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability, groupies){ // group graph creator 
+    var nodes= [];
+    var edges= [];
+    for (var i=0,i<dataInt.length, i++){// node creator 
+      var node ={
+        id: dataInt[i],
+        group: [availability[i]],// the extra brackets allow courses that are offered in more than one group to have more than one array and those with 1 work just perfectly as well
+        label: dataName[i]+ "\n Credits: " + dataCredits[i],
+        title: dataTitle[i]
+      };
+      nodes.push[node];
+    }
+    for (var i=0; i<prereqIDs.length; i+=2){// edge creator;
+      var edge = {
+        from:prereqIDs[i].from,
+        to:prereqIDs[i+1].to,
+        label: prereqIDs[i].label
+      };
+      edges.push[edge];
+    }
 
-  
-  var data = {
-      nodes: nodes,
-      edges: edges
-  };
+    var filteredNodes=[];
+    var filterEdges=[];
+
+    for( var i=0; i< nodes.length; i++) {
+        var node = nodes[i];
+        if (groupies.includes(node.group[0])){
+          filteredNodes.push(node);
+        }
+    }
+    for( var i=0; i< edges.length; i++) {
+      var edge = edges[i];
+      var fromNode = nodes.find(n=>n.id ===edge.from);
+      var toNode= nodes.find(n=> n.id === edges.to);
+      
+      if(fromNode && toNode && groupies.includes (fromNode.group[0]) && groupies.includes(toNode.group[0])) {
+        filterEdges.push[edge];
+      }
+    }
+
+    return { // group graph
+      nodes: new vis.DataSet(filteredNodes),
+      edges: new vis.DataSet(filteredEdges)
+    };
+    
+
+  }
+
   var options = {
   width: '100%',
   height: '700px',
@@ -160,53 +194,7 @@
   var container = document.getElementById('mynetwork');
   var network = new vis.Network(container, data, options);
 
-  fetch('Majors.txt')
-  .then(response => response.text())
-  .then(text => {
-    
-    const majorsList = document.getElementById('majors-list');
-    const majors = text.split('\n');
-    const nodes = [];
-    const edges =[];
-
-    majors.forEach((major) => { //this is for requirements
-      const majorItem = document.createElement('li');
-      //const requirements = major.split(',')[3]; majorItem.textContent=majors;
-      majorItem.textContent=major;
-      majorsList.appendChild(majorItem);
-    });
-    
-
-  majors.forEach((major) => {
-  const majorItem = document.createElement('p');
-  
-  const [classCode, className, classCred, classPreq, classAvailability]= major.split(',');
-  const node = {
-      id:classCode,
-        label:`${classCode} (${classCred} credits)`,
-      credit: classCred,
-      prerequisites: classPreq,
-      availability: classAvailability,
-    };
-    nodes.push(node);
-    //majorItem.textContent=JSON.stringify(node);
-  // majorsList.appendChild(majorItem);
-  });
-
-  for (let i = 0; i < nodes.length-1; i++){
-    const edge ={
-      from: nodes[i].id,
-      to: nodes[i+1].id,
-    };
-    edges.push(edge);
-
-    console.log(edge);
-    const majorItem = document.createElement('p');
-    //MajorItem.textContent=edge;
-    //majorsList.appendChild(majorItem);
-  }
-  });    
-
+ 
 </script>
 
 </body>
