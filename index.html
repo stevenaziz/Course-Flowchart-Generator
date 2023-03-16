@@ -98,11 +98,13 @@
       };
       edges.push[edge];
     }
-    return{ // total graph creator
+   var data = { // total graph creator
       nodes: new vis.DataSet{nodes}; // graph 
       edges: new vis.DataSet(edges);
     };
+   return data;
   }
+
   // group Graph creator was the trickiest to fathom
   //its almost like the regular graph but now it cares about the group part of the node based off availability
   // since availability could be "1" or both "1,2" or "1,2,3" its variable should be able to take in which ever value or values and clust single groups or groups with groups
@@ -152,12 +154,12 @@
       }
     }
 
-    return { // group graph
+    var data = { // group graph
       nodes: new vis.DataSet(filteredNodes),
       edges: new vis.DataSet(filteredEdges)
     };
     
-
+    return data;
   }
 
   var options = {
@@ -188,8 +190,7 @@
     minVelocity: 0.1,
     solver: 'barnesHut'
   }
-  };
-     
+  };   
   // create a network
   var container = document.getElementById('mynetwork');
   var network = new vis.Network(container, data, options);
