@@ -1,4 +1,3 @@
-SPU - Computer Science (BA)
 CSC 1230, Problem Solving & Programming, 5, [], [1,2,3]
 CSC 2430, Data Structures I, 5, [CSC 1230], [2,3]
 CSC 2431, Data Structures II, 5, [CSC 2430], [1,3]

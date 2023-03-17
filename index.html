@@ -81,9 +81,9 @@
   function EntireGraphCreator (dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability ) {// graphCreator 
     var nodes= [];
     var edges= [];
-    for (var i=0,i<dataInt.length, i++){// node creator 
+    for (var i=0; i<dataInt.length; i++){// node creator 
       var node ={
-        id: dataInt[i];
+        id: dataInt[i],
         group: [availability[i]],// the extra brackets allow courses that are offered in more than one group to have more than one array and those with 1 work just perfectly as well
         label: dataName[i]+ "\n Credits: " + dataCredits[i],
         title: dataTitle[i]
@@ -99,8 +99,8 @@
       edges.push[edge];
     }
    var data = { // total graph creator
-      nodes: new vis.DataSet{nodes}; // graph 
-      edges: new vis.DataSet(edges);
+      nodes: new vis.DataSet(nodes), // graph 
+      edges: new vis.DataSet(edges)
     };
    return data;
   }
@@ -117,7 +117,7 @@
   function GroupGraphCreator (dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability, groupies){ // group graph creator 
     var nodes= [];
     var edges= [];
-    for (var i=0,i<dataInt.length, i++){// node creator 
+    for (var i=0;i<dataInt.length; i++){// node creator 
       var node ={
         id: dataInt[i],
         group: [availability[i]],// the extra brackets allow courses that are offered in more than one group to have more than one array and those with 1 work just perfectly as well

@@ -1,4 +1,3 @@
-SPU - Computer Engineering (BS)
 CPE 3280, Microcontroller Systems Design, 5, [EE 1210, CPE 3760], [3]
 CPE 3350, Operating Systems Programming, 3, [CSC 2431, CPE 3760], [3]
 CPE 3550, Communication System Analysis, 5, [EE 2727, EE 1210], [1]
