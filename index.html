@@ -50,10 +50,6 @@
 </form>
 
 <div id="mynetwork">
-  <div class="division" id="Freshmen-Yr"></div>
-  <div class="division" id="Sophomore-Yr"></div>
-  <div class="division" id="Junior-Yr"></div>
-  <div class="division" id="Senior-Yr"></div>
 </div>
 
 <script src="vis-network.js"></script>
@@ -78,8 +74,6 @@
 
   //Number1. this is a function that takes in defined parameters to creat a graph
   //does number 1 and 3 in chat 
-<<<<<<< Updated upstream
-=======
   var dataInt=[1230, 2430, 2540, 5484];
   var dataName=["CSC", "MAT", "YTY", "UiHIj"];
   var dataTitle =["intro", "welcome", "hi", "euhre"];
@@ -87,7 +81,6 @@
   var prereqIDs=[1230, 2430, 1230, 2540, 2540, 5484];
   var availability=[[1],[1,2],[1],[2,3]];
 
->>>>>>> Stashed changes
   function EntireGraphCreator (dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability ) {// graphCreator 
     var nodes= [];
     var edges= [];
@@ -98,15 +91,15 @@
         label: dataName[i]+ "\n Credits: " + dataCredits[i],
         title: dataTitle[i]
       };
-      nodes.push[node];
+      nodes.push(node);
     }
     for (var i=0; i<prereqIDs.length; i+=2){// edge creator
       var edge = {
-        from:prereqIDs[i].from,
-        to:prereqIDs[i+1].to,
-        label: prereqIDs[i].label
+        from:prereqIDs[i],
+        to:prereqIDs[i+1]
+        //label: prereqIDs[i].toString()
       };
-      edges.push[edge];
+      edges.push(edge);
     }
    var data = { // total graph creator
       nodes: new vis.DataSet(nodes), // graph 
@@ -124,7 +117,7 @@
   
 // Number 2. this is the function that takes in defined parameter groupies which could be "1" or "2" or "3" or "1,2" or "1,3" or" 2,3 " or "1,2,3" basically i would describe it as an array of arrays is a possible groupies value I THINK
 // does Number 2 and 3 in chat
-  function GroupGraphCreator (dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability, groupies){ // group graph creator 
+  /*function GroupGraphCreator (dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability, groupies){ // group graph creator 
     var nodes= [];
     var edges= [];
     for (var i=0;i<dataInt.length; i++){// node creator 
@@ -170,7 +163,7 @@
     };
     
     return data;
-  }
+  }*/
 
   var options = {
   width: '100%',
@@ -181,10 +174,10 @@
   layout: {
   hierarchical: {
   direction: "LR", // set the direction of the layout
-  sortMethod: "directed", // sort the nodes according to their position in the graph
-  root: 1230, // set node 19 as the root of the graph
+  sortMethod: "directed" // sort the nodes according to their position in the graph
+  //root: dataInt[0]// set node 19 as the root of the graph
 
-  avoidOverlap: true
+  //avoidOverlap: true
     }
   },
   physics: {
@@ -193,23 +186,18 @@
     centralGravity: 0.3,
     springLength: 95,
     springConstant: 0.04,
-    damping: 0.09,
-    avoidOverlap: 0
+    damping: 0.09
+    //avoidOverlap: 0
       },
     maxVelocity: 50,
     minVelocity: 0.1,
     solver: 'barnesHut'
   }
   };   
-<<<<<<< Updated upstream
-  // create a network
-=======
-  var data = {EntireGraphCreator(dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability)};
+  var data = EntireGraphCreator(dataInt, dataName, dataTitle, dataCredits,  prereqIDs, availability);
  
->>>>>>> Stashed changes
   var container = document.getElementById('mynetwork');
   var network = new vis.Network(container, data, options);
-
  
 </script>
 
