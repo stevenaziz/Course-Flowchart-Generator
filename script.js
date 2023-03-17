@@ -1,5 +1,10 @@
 // Variables
 const fileInput = new FileReader();
+let courseObjArr = []; // all courses
+let availAutumnArr = [];
+let availWinterArr = [];
+let availSpringArr = [];
+let noPrereqsArr = [];
 
 // Selectors
 const inputFile = document.querySelector("#major-reqs");
@@ -9,6 +14,7 @@ const submitBtn = document.querySelector("#submit-btn");
 // Listeners
 submitBtn.addEventListener("click", processInput);
 
+// Upon submit button, capture form data, read file, and call parsing function
 function processInput(e) {
     e.preventDefault();
 
@@ -19,18 +25,14 @@ function processInput(e) {
     fileInput.addEventListener("load", parseFile);
 }
 
+// Parse data in fileInput and create multiple arrays of objects
 function parseFile() {
     let coursesArr = fileInput.result.split(/\r?\n/); // split by new line
     let courseCodeNameCredsArr = [];
     let coursePrereqsAvailArr = [];
     let coursePrereqsArr = [];
     let courseAvailArr = [];
-    let courseObjArr = [];
     let currObj = {};
-    let availAutumnArr = [];
-    let availWinterArr = [];
-    let availSpringArr = [];
-    let noPrereqsArr = [];
 
     coursesArr.forEach(courseInfo => {
         courseCodeNameCredsArr = courseInfo.split(",", 3);
