@@ -1,14 +1,11 @@
 // Global Variables
 const fileInput = new FileReader();
-let maxCredits;
-let startQtr;
+let idMap = new Map();
+let userMaxCredits;
+let userStartQtr;
 let courseObjArr = [];
+let idsArr = [];
 let edgesArr = [];
-let nodesArr = [];
-let availAutumnArr = [];
-let availWinterArr = [];
-let availSpringArr = [];
-let noPrereqsArr = [];
 
 // Selectors
 const inputFile = document.querySelector("#major-reqs");
@@ -24,16 +21,13 @@ function processInput(e) {
 
     // clear array
     courseObjArr.length = 0;
+    idsArr.length = 0;
     edgesArr.length = 0;
-    nodesArr.length = 0;
-    availAutumnArr.length = 0;
-    availWinterArr.length = 0;
-    availSpringArr.length = 0;
-    noPrereqsArr.length = 0;
+    idMap.clear();
 
     // get form data
-    maxCredits = inputMaxCredits.value;
-    startQtr = document.querySelector('input[name="start-qtr"]:checked').value;
+    userMaxCredits = inputMaxCredits.value;
+    userStartQtr = document.querySelector('input[name="start-qtr"]:checked').value;
 
     // read text file and call parsing function
     fileInput.readAsText(inputFile.files[0]);
@@ -48,14 +42,15 @@ function parseFile() {
     let coursePrereqsArr = [];
     let courseAvailArr = [];
     let currObj = {};
+    let currEdge = [];
     let currID;
     let tempID;
 
     coursesArr.forEach(courseInfo => {
         courseCodeNameCredsArr = courseInfo.split(",", 3);
 
-        currID = +(courseCodeNameCredsArr[0].replace(/\D/g, "")), // replace anything NOT a digit with empty string
-        nodesArr.push(currID);
+        currID = +(courseCodeNameCredsArr[0].replace(/\D/g, "")) // replace anything NOT a digit with empty string;
+        idsArr.push(currID);
         
         coursePrereqsAvailArr = courseInfo.split("[");
         coursePrereqsAvailArr.shift(); // Removes course code, name, and credits (already processed)
@@ -67,7 +62,8 @@ function parseFile() {
             tempID = +(element.replace(/\D/g, ""));
             if (tempID != 0) {
                 array[index] = +(element.replace(/\D/g, ""));
-                edgesArr.push([currID, tempID]);
+                currEdge = [currID, tempID]
+                edgesArr.push(currEdge);
             } else {
                 array.shift();
             }
@@ -90,30 +86,55 @@ function parseFile() {
 
         courseObjArr.push(currObj);
 
-        // console.log(`{code: ${currObj.code}, id: ${currObj.id}, name: ${currObj.name}, credits: ${currObj.credits}, prereqs: [${currObj.prereqs}], avail: [${currObj.avail}]}, `);
-
-        courseAvailArr.forEach(element => {
-            if (element == 1) {
-                availAutumnArr.push(currObj);
-            }
-            if (element == 2) {
-                availWinterArr.push(currObj);
-            }
-            if (element == 3) {
-                availSpringArr.push(currObj);
-            }
-        });
-
-        if (coursePrereqsArr.length == 0) {
-            noPrereqsArr.push(currObj);
-        }
+        idMap.set(currObj.id, currObj);
     });
-    
-    console.log(toposort(nodesArr, edgesArr).reverse());
+
+    // call main function to sort and print output
+    main();
 }
 
-function groupCoursesByQtr(start_qtr, max_creds) {
-    let currQtr = start_qtr;
+function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
+    if (startQtr == 0) {
+        startQtr = sortedObjsArr[0].avail[0];
+    }
 
-    return toposort(nodesArr, edgesArr).reverse();
+    let courseGroupsArr = [];
+    let selectedCoursesArr = [];
+    const numCourses = sortedObjsArr.length;
+    let currQtrCreds = 0;
+    let i = 0;
+    let currQtr = function(index) { // anonymous function that uses startQtr and array index to determine the current quarter
+        index += startQtr;
+        index %= 3;
+        if (index == 0) { return 3; }
+        return index;
+    }
+
+
+    while (selectedCoursesArr.length < numCourses) {
+        courseGroupsArr[i] = [];
+        for (let j = 0; (j < sortedObjsArr.length) && (currQtrCreds < maxCredits); j++) {
+            if (sortedObjsArr[j].avail.includes(currQtr(i)) && sortedObjsArr[j].prereqs.every(prereq => selectedCoursesArr.includes(prereq)) && ((currQtrCreds + sortedObjsArr[j].credits) <= maxCredits)) {
+                selectedCoursesArr.push(sortedObjsArr[j].id);
+                currQtrCreds += sortedObjsArr[j].credits;
+                courseGroupsArr[i].push(sortedObjsArr[j]);
+                sortedObjsArr.splice(j, 1);
+                j--;
+            }
+        }
+
+        currQtrCreds = 0;
+        i++;
+    }
+    console.log(courseGroupsArr);
+}
+
+function main () {
+    let sortedObjsArr = [];
+
+    toposort(idsArr, edgesArr).reverse().forEach(id => {
+        sortedObjsArr.push(idMap.get(id));
+    });
+
+    createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr);
 }
