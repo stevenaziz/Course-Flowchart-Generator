@@ -66,9 +66,10 @@
   {code: "MAT 2430", id: 2430, name: "Math for Computer Science", credits: 3, prereqs: [2727, 3760], avail:[1]},
   {code: "CPE 4750", id: 4750, name: "Computer Networks", credits: 5, prereqs: [3760], avail: [3]}
   ];
-
+  
   var nodes= [];
   var edges= [];
+  function createGraph (courseArray) {
   for (let i = 0; i < courseArray.length; i++) {
   nodes.push({
     id: courseArray[i].id,
@@ -144,7 +145,9 @@ var groups = new vis.DataSet ([// group dataSet and content creator, where every
  
   var container = document.getElementById('mynetwork');
   var network = new vis.Network(container, data, options);
-
+  
+}
+createGraph(courseArray); // made it a function with extra line 
 </script>
 
 </body>
