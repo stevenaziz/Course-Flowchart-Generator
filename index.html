@@ -56,48 +56,42 @@
 
 <script>
   
-  var nodes= [];
-  var edges= [];
-  let visnodes;
-  let visedges;
-
   let courseArray = [
   {code: "CPE 3280", id: 3280, name: "Microcontroller Systems Design", credits: 5, prereqs: [1210,3760], avail: [3]}, 
   {code: "CPE 3350", id: 3350, name: "Operating Systems Programming", credits: 3, prereqs: [2431,3760], avail: [3]}, 
   {code: "CPE 3550", id: 3550, name: "Communication System Analysis", credits: 5, prereqs: [2727,1210], avail: [1]}, 
   {code: "CPE 3760", id: 3760, name: "Computer Organization & Assem Lang", credits: 5, prereqs: [1210,2430], avail: [2]},
   {code: "CPE 4750", id: 4750, name: "Computer Networks", credits: 5, prereqs: [3760], avail: [3]}
-];
+  ];
+
+  var nodes= [];
+  var edges= [];
+  for (let i = 0; i < courseArray.length; i++) {
+  nodes.push({
+    id: courseArray[i].id,
+    label: courseArray[i].code,
+    title: courseArray[i].name + "\n" + courseArray[i].credits,
+    shape: "box",
+  });
+}
+
+// Create edges
+for (let i = 0; i < courseArray.length; i++) {
+  let prereqs = courseArray[i].prereqs;
+  for (let j = 0; j < prereqs.length; j++) {
+    edges.push({
+      from: prereqs[j],
+      to: courseArray[i].id,
+    });
+  }
+}
+
+
 
   
-let prereqIDs = [[courseArray[0], courseArray[2]], [courseArray[0], courseArray[1]],[courseArray[2],courseArray[4]]];
-
-  function EntireGraphCreator (courseArray, prereqIDs) {// graphCreator   
-    for (var i=0; i<courseArray.length; i++){// node creator 
-      var node = {
-        id: courseArray[i].id,
-        group: courseArray[i].avail,// the extra brackets allow courses that are offered in more than one group to have more than one array and those with 1 work just perfectly as well
-        label: courseArray[i].name + "\n " + courseArray[i].credits,
-        title: courseCode[i].title
-      }
-      nodes.push(node);
-    }
-    for (var i=0; i<prereqIDs.length; i+=2){// edge creator // make array of arrays
-      var edge = {
-        from: prereqIDs[i][0].id,
-        to: prereqIDs[i][1].id
-        //label: prereqIDs[i].toString()
-      };
-      edges.push(edge);
-    }
-   
-     visnodes = new vis.DataSet(nodes); // graph 
-     visedges = new vis.DataSet(edges);
-     
-  }
   var data = {
-    nodes: visnodes,
-    edges: visedges
+    nodes: nodes,
+    edges: edges
   }
 
   
@@ -111,9 +105,6 @@ let prereqIDs = [[courseArray[0], courseArray[2]], [courseArray[0], courseArray[
   hierarchical: {
   direction: "LR", // set the direction of the layout
   sortMethod: "directed" // sort the nodes according to their position in the graph
-  //root: dataInt[0]// set node 19 as the root of the graph
-
-  //avoidOverlap: true
     }
   },
   physics: {
@@ -122,8 +113,8 @@ let prereqIDs = [[courseArray[0], courseArray[2]], [courseArray[0], courseArray[
     centralGravity: 0.3,
     springLength: 95,
     springConstant: 0.04,
-    damping: 0.09
-    //avoidOverlap: 0
+    damping: 0.09,
+    avoidOverlap: 0
       },
     maxVelocity: 50,
     minVelocity: 0.1,
@@ -133,7 +124,7 @@ let prereqIDs = [[courseArray[0], courseArray[2]], [courseArray[0], courseArray[
  
   var container = document.getElementById('mynetwork');
   var network = new vis.Network(container, data, options);
- 
+
 </script>
 
 </body>
