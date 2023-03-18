@@ -60,8 +60,10 @@
   let courseArray = [
   {code: "CPE 3280", id: 3280, name: "Microcontroller Systems Design", credits: 5, prereqs: [1210,3760], avail: [3]}, 
   {code: "CPE 3350", id: 3350, name: "Operating Systems Programming", credits: 3, prereqs: [2431,3760], avail: [3]}, 
-  {code: "CPE 3550", id: 3550, name: "Communication System Analysis", credits: 5, prereqs: [2727,1210], avail: [1]}, 
+  {code: "CPE 3440", id: 3550, name: "Communication System Analysis", credits: 5, prereqs: [2727,1210], avail: [3]}, 
   {code: "CPE 3760", id: 3760, name: "Computer Organization & Assem Lang", credits: 5, prereqs: [1210,2430], avail: [2]},
+  {code: "CSC 1210", id: 1210, name: "Computer Everything", credits: 5, prereqs: [], avail: [2]},
+  {code: "MAT 2430", id: 2430, name: "Math for Computer Science", credits: 3, prereqs: [2727, 3760], avail:[1]},
   {code: "CPE 4750", id: 4750, name: "Computer Networks", credits: 5, prereqs: [3760], avail: [3]}
   ];
 
@@ -72,6 +74,7 @@
     id: courseArray[i].id,
     label: courseArray[i].code,
     title: courseArray[i].name + "\n" + courseArray[i].credits,
+    group: courseArray[i].avail[0], // how group graphs are created 
     shape: "box",
   });
 }
@@ -86,13 +89,19 @@ for (let i = 0; i < courseArray.length; i++) {
     });
   }
 }
-
+ 
+var groups = new vis.DataSet ([// group dataSet and content creator, where every group is arranged by color
+  {id: 1, content: 'Fall' },
+  {id: 2, content: 'Winter'},
+  {id: 3, content: 'Spring'}
+])
 
 
   
   var data = {
     nodes: nodes,
-    edges: edges
+    edges: edges,
+    groups: groups// group addition
   }
 
   
@@ -120,6 +129,16 @@ for (let i = 0; i < courseArray.length; i++) {
     maxVelocity: 50,
     minVelocity: 0.1,
     solver: 'barnesHut'
+  },
+  groups: { // group design
+    useDefaultGroups: false,
+    font: {
+      color: '#fff',
+      size: 14,
+      face: 'arial',
+      strokeWidth: 0.5,
+      strokeColor: '#fff'
+    }
   }
   };   
  
