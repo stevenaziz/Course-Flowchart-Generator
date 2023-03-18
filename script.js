@@ -22,16 +22,20 @@ submitBtn.addEventListener("click", processInput);
 function processInput(e) {
     e.preventDefault();
 
-    courseObjArr = [];
-    edgesArr = [];
-    nodesArr = [];
-    availAutumnArr = [];
-    availWinterArr = [];
-    availSpringArr = [];
-    noPrereqsArr = [];
+    // clear array
+    courseObjArr.length = 0;
+    edgesArr.length = 0;
+    nodesArr.length = 0;
+    availAutumnArr.length = 0;
+    availWinterArr.length = 0;
+    availSpringArr.length = 0;
+    noPrereqsArr.length = 0;
+
+    // get form data
     maxCredits = inputMaxCredits.value;
     startQtr = document.querySelector('input[name="start-qtr"]:checked').value;
 
+    // read text file and call parsing function
     fileInput.readAsText(inputFile.files[0]);
     fileInput.addEventListener("load", parseFile);
 }
