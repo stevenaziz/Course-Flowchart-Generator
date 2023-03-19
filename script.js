@@ -14,7 +14,7 @@ let currQtr = function(index, startQtr) { // anonymous function that uses startQ
 }
 
 // Selectors
-let graphContainer = document.getElementById('mynetwork');
+let GraphNoConstraints = document.getElementById('GraphNoConstraints');
 const inputFile = document.querySelector("#major-reqs");
 const inputMaxCredits = document.querySelector("#max-credits");
 const submitBtn = document.querySelector("#submit-btn");
@@ -165,7 +165,7 @@ function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
 }
 
 // creates the graph to be visaulized in memeory
-function createVisGraph(courseArr) {
+function createVisGraph(courseArr,graphContainer) {
     let visObjects = [];
     let visEdges = [];
 
@@ -283,6 +283,6 @@ function main () {
         sortedObjsArr.push(idMap.get(id));
     });
 
-    createVisGraph(createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr));
+    createVisGraph(createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr), GraphNoConstraints);
     
 }

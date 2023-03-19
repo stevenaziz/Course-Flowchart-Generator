@@ -1,7 +1,4 @@
 # Creating a Flowchart
-
-_**You should erase this the text below as you fill it up with your own text**_
-
 Here you will describe your term project. Remember to write your names.
 [More detailed instructions here](Flowchart-Graph.pptx)
 
