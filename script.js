@@ -1,12 +1,8 @@
 // Global Variables
-const fileInput = new FileReader();
-let idMap = new Map();
 let userMaxCredits;
 let userStartQtr;
-let courseObjArr = [];
-let idsArr = [];
-let edgesArr = [];
-let currQtr = function(index, startQtr) { // anonymous function that uses startQtr and array index to determine the current quarter
+// anonymous function that uses startQtr and array index to determine the current quarter
+let currQtr = function(index, startQtr) {
     index += startQtr;
     index %= 3;
     if (index == 0) { return 3; }
@@ -30,12 +26,9 @@ submitBtn.addEventListener("click", processInput);
 function processInput(e) {
     e.preventDefault();
 
-    // clear array
-    courseObjArr.length = 0;
-    idsArr.length = 0;
-    edgesArr.length = 0;
-    idMap.clear();
+    let fileInput = new FileReader();
 
+    // check user input is present, else throw error and stop
     try {
         if (
             isNaN(inputMaxCredits.value) || 
@@ -58,12 +51,19 @@ function processInput(e) {
 
     // read text file and call parsing function
     fileInput.readAsText(inputFile.files[0]);
-    fileInput.addEventListener("load", parseFile);
+    fileInput.addEventListener("load", function() {
+        parseFile(fileInput);
+    });
 }
 
 // Parse data in fileInput and create multiple arrays of objects
-function parseFile() {
-    let coursesArr = fileInput.result.split(/\r?\n/); // split by new line
+function parseFile(fileInput) {
+    let idsArr = [];
+    let edgesArr = [];
+    let coursesArr = [];
+    let idCourseMap = new Map();
+
+    let inputFileLinesArr = fileInput.result.split(/\r?\n/);        // split by new line
     let courseCodeNameCredsArr = [];
     let coursePrereqsAvailArr = [];
     let coursePrereqsArr = [];
@@ -71,34 +71,38 @@ function parseFile() {
     let currObj = {};
     let currEdge = [];
     let currID;
-    let tempID;
+    let temp;
 
-    coursesArr.forEach(courseInfo => {
-        courseCodeNameCredsArr = courseInfo.split(",", 3);
+    inputFileLinesArr.forEach(line => {
+        courseCodeNameCredsArr = line.split(",", 3);
 
-        currID = +(courseCodeNameCredsArr[0].replace(/\D/g, "")) // replace anything NOT a digit with empty string;
-        idsArr.push(currID);
+        currID = +(courseCodeNameCredsArr[0].replace(/\D/g, ""))    // replace anything NOT a digit with empty string;
         
-        coursePrereqsAvailArr = courseInfo.split("[");
-        coursePrereqsAvailArr.shift(); // Removes course code, name, and credits (already processed)
+        coursePrereqsAvailArr = line.split("[");
+        coursePrereqsAvailArr.shift();                              // Removes course code, name, and credits (already processed)
 
         coursePrereqsAvailArr[0] = coursePrereqsAvailArr[0].trim(); // remove start-end whitespace
         coursePrereqsArr = coursePrereqsAvailArr[0].split(",");
-        coursePrereqsArr.pop(); // remove last element - empty
+        coursePrereqsArr.pop();                                     // remove last element - empty
         coursePrereqsArr.forEach((element, index, array) => {
-            tempID = +(element.replace(/\D/g, ""));
-            if (tempID != 0) {
-                array[index] = +(element.replace(/\D/g, ""));
-                currEdge = [tempID, currID]
+            temp = +(element.replace(/\D/g, ""));
+            if (temp != 0) {
+                array[index] = temp;
+                currEdge = [temp, currID]
                 edgesArr.push(currEdge);
             } else {
-                array.shift();
+                array.length = 0;
             }
         });
 
         courseAvailArr = coursePrereqsAvailArr[1].split(",");
         courseAvailArr.forEach((element, index, array) => {
-            array[index] = +(element.replace(/\D/g, ""));
+            temp = +(element.replace(/\D/g, ""));
+            if ((temp != 1) && (temp != 2) && (temp != 3)) {
+                formAlert.innerText = "Please check your input and try again.";
+                return;
+            }
+            array[index] = temp;
         });
 
         currObj = {
@@ -108,59 +112,60 @@ function parseFile() {
             credits: parseInt(courseCodeNameCredsArr[2]),
             prereqs: coursePrereqsArr,
             avail: courseAvailArr,
-            group: 0
+            group: 0                                                // will be updated later
         };
 
-        courseObjArr.push(currObj);
+        if (isNaN(currID) || currObj.credits < 1 || currObj.credits > 5) {
+            formAlert.innerText = "Please check your input and try again.";
+            return;
+        }
 
-        idMap.set(currObj.id, currObj);
+        idsArr.push(currID);
+        idCourseMap.set(currID, currObj);
+        coursesArr.push(currObj);
     });
 
     // call main function to sort and print output
-    main();
+    main([idsArr, edgesArr, coursesArr, idCourseMap]);
 }
 
-function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
-    if (startQtr == 0) {
-        startQtr = sortedObjsArr[0].avail[0];   // if no start qtr is provided pick the earliest qtr
-    }
-
-    let courseGroupsArr = [];                   // final results array —— array of arrays
-    let allSelectedCoursesArr = [];             // array of all courses visisted
-    let currSelectedCoursesArr = [];            // array of courses being visited by selected qtr
-    const numCourses = sortedObjsArr.length;    // number of courses
+function createCourseGroups(startQtr, maxCredits, sortedCoursesArr) {    
+    let arrOfGroupsArr = [];                                        // final results array —— array of arrays
+    let allSelectedCoursesArr = [];                                 // array of all courses visisted
+    let currSelectedCoursesArr = [];                                // array of courses being visited by selected qtr
+    const numCourses = sortedCoursesArr.length;                     // number of total courses
     let currQtrCreds = 0;
     let i = 0;
     
     while (allSelectedCoursesArr.length < numCourses) {
-        courseGroupsArr[i] = [];
-        for (let j = 0; (j < sortedObjsArr.length) && (currQtrCreds < maxCredits); j++) {
+        arrOfGroupsArr[i] = [];
+        for (let j = 0; (j < sortedCoursesArr.length) && (currQtrCreds < maxCredits); j++) {
             if (
-                (sortedObjsArr[j].avail.includes(currQtr(i, startQtr))) &&  // course available this qtr
-                (sortedObjsArr[j].prereqs.every(prereq => allSelectedCoursesArr.includes(prereq))) && // all prereqs met
-                ((currQtrCreds + sortedObjsArr[j].credits) <= maxCredits)   // course won't cause quarter to exceed max credits
+                (sortedCoursesArr[j].avail.includes(currQtr(i, startQtr))) &&                               // course available this qtr
+                (sortedCoursesArr[j].prereqs.every(prereq => allSelectedCoursesArr.includes(prereq))) &&    // all prereqs met
+                ((currQtrCreds + sortedCoursesArr[j].credits) <= maxCredits)                                // course won't cause quarter to exceed max credits
                 ) 
                 {
-                currSelectedCoursesArr.push(sortedObjsArr[j].id);   // add course to buffer array
-                currQtrCreds += sortedObjsArr[j].credits;           // increment current qtr credits
-                courseGroupsArr[i].push(sortedObjsArr[j]);          // add course to final groups array
-                sortedObjsArr.splice(j, 1);                         // remove course from array being iterated
-                j--;                                                // decrement iterator since loop will increment it
+                currSelectedCoursesArr.push(sortedCoursesArr[j].id);   // add course to current qtr array
+                currQtrCreds += sortedCoursesArr[j].credits;           // increment current qtr credits
+                arrOfGroupsArr[i].push(sortedCoursesArr[j]);           // add course to final groups array in group i
+                sortedCoursesArr.splice(j, 1);                         // remove course from array being iterated
+                j--;                                                   // decrement iterator since for-loop will increment it
             }
         }
 
-        allSelectedCoursesArr = allSelectedCoursesArr.concat(currSelectedCoursesArr);
+        allSelectedCoursesArr = allSelectedCoursesArr.concat(currSelectedCoursesArr);                       // join courses selected for this qtr with all selected courses
         
         currSelectedCoursesArr.length = 0;
         currQtrCreds = 0;
 
         i++;
     }
-    return courseGroupsArr;
+    return arrOfGroupsArr;
 }
 
 // creates the graph to be visaulized in memeory
-function createVisGraph(courseArr, graphContainer) {
+function createVisGraph(courseArr, edgesArr, graphContainer) {
     let visObjects = [];
     let visEdges = [];
 
@@ -170,8 +175,8 @@ function createVisGraph(courseArr, graphContainer) {
             id: courseArr[i].id,
             label: courseArr[i].code,
             title: courseArr[i].name + "\n" + courseArr[i].credits,
-            level: courseArr[i].group, // how group graphs are created
-            group: courseArr[i].group%3,
+            level: courseArr[i].group,                              // each level is one quarter
+            group: courseArr[i].group%3,                            // each group is a collection of levels (Autumn/Winter/Spring)  
             shape: "box"
         });
     }
@@ -185,7 +190,7 @@ function createVisGraph(courseArr, graphContainer) {
     });
 
     // create groups for each quarter
-    let visGroups = new vis.DataSet([     // group dataSet and content creator, where every group is arranged by color
+    let visGroups = new vis.DataSet([
         {id: 1, content: 'Fall'},
         {id: 2, content: 'Winter'},
         {id: 0, content: 'Spring'}
@@ -268,51 +273,54 @@ function createVisGraph(courseArr, graphContainer) {
     let network = new vis.Network(graphContainer, data, options);
 }
 
-function main () {
-    let sortedObjsArr = [];
+function main ([idsArr, edgesArr, coursesArr, idCourseMap]) {
+    const sortedIdsArr = toposort(idsArr, edgesArr);
+    let sortedCoursesArr = [];
+    let arrsOfGroupsArr = [];
 
-    toposort(idsArr, edgesArr).forEach(id => {
-        sortedObjsArr.push(idMap.get(id));
-    });
-
-    let courseObjArrWGroups = function(arrayOfArrays) {
-        let tempArr = [];
+    let coursesWGroups = function(arrayOfArrays) {
+        let coursesWGroupsArr = [];
         arrayOfArrays.forEach((element, index) => {
             element.forEach(courseObj => {
                 courseObj.group = index;
-                tempArr.push(courseObj);
+                coursesWGroupsArr.push(courseObj);
             });
         });
-        return tempArr;
+        return coursesWGroupsArr;
     }
 
 
 
-    // without constraints
-    startQtr =  sortedObjsArr[0].avail[0];
+    // without constraints    
+    sortedIdsArr.forEach((id, index) => {
+        sortedCoursesArr[index] = idCourseMap.get(id);
+    });
+    
+    startQtr = sortedCoursesArr[0].avail[0];
 
-    let coursesByQtrArr = createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr); // array of arrays of objects
+    arrsOfGroupsArr = createCourseGroups(startQtr, Number.MAX_SAFE_INTEGER, sortedCoursesArr);
 
+    //ListNoConstraints.classList.remove("display-none");
     // coursesByQtrArr.forEach((qtrArr, qtrIdx) => {
     //     qtrArr.forEach(courseObj => {
     //         // use a variable to track this currQtr(qtrIdx, startQtr)
     //         // use courseObj to print your OL list with li elements as courses
     //     });
     // });
-    
-    createVisGraph(courseObjArrWGroups(coursesByQtrArr), GraphNoConstraints);
+
+    GraphNoConstraints.classList.remove("display-none");
+    createVisGraph(coursesWGroups(arrsOfGroupsArr), edgesArr, GraphNoConstraints);
 
 
 
     // with constraints
-    sortedObjsArr.length = 0;
-    
-    toposort(idsArr, edgesArr).forEach(id => {
-        sortedObjsArr.push(idMap.get(id));
+    sortedIdsArr.forEach((id, index) => {                               // we need to run this again since the createCourseGroups
+        sortedCoursesArr[index] = idCourseMap.get(id);                  // function removes all elements from this array when called
     });
 
-    coursesByQtrArr = createCourseGroups(userStartQtr, userMaxCredits, sortedObjsArr); // array of arrays of objects
+    arrsOfGroupsArr = createCourseGroups(userStartQtr, userMaxCredits, sortedCoursesArr);
 
+    //ListWithConstraints.classList.remove("display-none");
     // coursesByQtrArr.forEach((qtrArr, qtrIdx) => {
     //     qtrArr.forEach(courseObj => {
     //         // use a variable to track this currQtr(qtrIdx, userStartQtr)
@@ -320,5 +328,6 @@ function main () {
     //     });
     // });
 
-    createVisGraph(courseObjArrWGroups(coursesByQtrArr), GraphWithConstraints);
+    GraphWithConstraints.classList.remove("display-none");
+    createVisGraph(coursesWGroups(arrsOfGroupsArr), edgesArr, GraphWithConstraints);
 }

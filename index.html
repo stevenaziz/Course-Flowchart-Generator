@@ -8,56 +8,57 @@
 </head>
 
 <body>
-<header>Course Flowchart Generator</header>
-<p>Please ensure that your selections meet the following criteria</p>
+  <header>Course Flowchart Generator</header>
+  <p>Please ensure that your selections meet the following criteria</p>
 
-<ul>
-  <li>The file must be a .txt</li>
-  <li>Each line in the file corresponds with one required class</li>
-  <li>
-    Each line is in the following format:<br>
-    [course_code], [course_name], [credits], [[prerequisite_classes]], [[course_availability]]
-  </li>
-  <li>[prerequisite_classes] must be in the format [course1_code], [course2_code], ...</li>
-  <li>[course_availability] is in the format [X], [Y], ... where X and Y represent {1, 2, 3} for each quarter in a typical year the course is offered</li>
-  <li>[prerequisite_classes] may be empty [] if there are no prerequisite classes</li>
-  <br>
-  <li>
-    The final format should look like the following<br>
-    EGR 2200, Engineering Probability & Stats, 3, [MAT 1235], [2, 3]
-  </li>
-</ul>
+  <ul>
+    <li>The file must be a .txt</li>
+    <li>Each line in the file corresponds with one required class</li>
+    <li>
+      Each line is in the following format:<br>
+      [course_code], [course_name], [credits], [[prerequisite_classes]], [[course_availability]]
+    </li>
+    <li>[prerequisite_classes] must be in the format [course1_code], [course2_code], ...</li>
+    <li>[course_availability] is in the format [X], [Y], ... where X and Y represent {1, 2, 3} for each quarter in a typical year the course is offered</li>
+    <li>[prerequisite_classes] may be empty [] if there are no prerequisite classes</li>
+    <br>
+    <li>
+      The final format should look like the following<br>
+      EGR 2200, Engineering Probability & Stats, 3, [MAT 1235], [2, 3]
+    </li>
+  </ul>
 
-<form>
-  <label for="major-reqs">Requirements File</label>
-  <input type="file" name="major-reqs" id="major-reqs" accept=".txt" required>
-  <br>
-  <label for="max-credits">Max Credits Per Quarter</label>
-  <input type="number" name="max-credits" id="max-credits" min="5" step="1" placeholder="15" required>
-  <br>
-  <label>Starting Quarter</label>
-  <br>
-  <input type="radio" name="start-qtr" id="autumn" value="1" required>
-  <label for="autumn">Autumn</label>
-  <br>
-  <input type="radio" name="start-qtr" id="winter" value="2" required>
-  <label for="winter">Winter</label>
-  <br>
-  <input type="radio" name="start-qtr" id="spring" value="3" required>
-  <label for="spring">Spring</label>
-  <br><br>
-  <button type="submit" id="submit-btn">Submit</button>
-</form>
+  <form>
+    <label for="major-reqs">Requirements File</label>
+    <input type="file" name="major-reqs" id="major-reqs" accept=".txt" required>
+    <br>
+    <label for="max-credits">Max Credits Per Quarter</label>
+    <input type="number" name="max-credits" id="max-credits" min="5" step="1" placeholder="15" required>
+    <br>
+    <label>Starting Quarter</label>
+    <br>
+    <input type="radio" name="start-qtr" id="autumn" value="1" required>
+    <label for="autumn">Autumn</label>
+    <br>
+    <input type="radio" name="start-qtr" id="winter" value="2" required>
+    <label for="winter">Winter</label>
+    <br>
+    <input type="radio" name="start-qtr" id="spring" value="3" required>
+    <label for="spring">Spring</label>
+    <br><br>
+    <button type="submit" id="submit-btn">Submit</button>
+  </form>
 
-<p class="form-alert"></p>
+  <p class="form-alert"></p>
 
-<div id="ListNoConstraints"></div>
-<div id="GraphNoConstraints"></div>
-<div id="ListWithConstraints"></div>
-<div id="GraphWithConstraints"></div>
+  <ol id="ListNoConstraints" class="display-none"></ol>
+  <div id="GraphNoConstraints" class="display-none"></div>
+  <ol id="ListWithConstraints" class="display-none"></ol>
+  <div id="GraphWithConstraints" class="display-none"></div>
 
-<script src="toposort.js"></script>
-<script src="vis-network.js"></script>
-<script src="script.js"></script>
+  <script src="toposort.js"></script>
+  <script src="vis-network.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
