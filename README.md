@@ -6,28 +6,58 @@ Here you will describe your term project. Remember to write your names.
 [More detailed instructions here](Flowchart-Graph.pptx)
 
 You will need to include in this repository:
-- `major1.txt` contains the courses a student needs to take to fulfill one major
-- `major2.txt` contains the courses a student needs to take to fulfill another major
-- The source code of your program
+- `SPU_Computer_Engineering_BS.txt` contains the courses a student needs to take to fulfill Computer Engineering BS major
+- `SPU_Computer_Science_BA.txt` contains the courses a student needs to take to fulfill Computer Science BA major
+//- The source code of your program
 
 This document should be organized as follows:
 
 # Creating a Flowchart from a Dependency List
-A work by: McDonald Berger and Igor Tzankoven
+A work by: Steven Aziz and Azhar Kimanje
 
 *Write an introduction to your work*
+## Introduction
+This programming project implementing a courseflow chart using the third party libraries
+toposort.js
+vis-network.js 
+vis-network.js.map  
+
+This project was designed on Visual Studio Code and runs as a webpage on a browser environment
 
 ## Description
 *Describe what your project is about and what language you used*
+This project is about being able to use a third party library to implement a graphing algorithm and create a DAG that can help students plan how to take courses in Computer Science BA and Computer Engineering BS. The project utilizes vis.js and toposort.js to arrange and graph the information from the text file. 
+
 
 ## Requirements
 *The requirements of the program, i.e. Python 3.1, what libraries are needed*
+Project files include: index.html, toposort.js, script.js, vis-network.js, vis-network.js.map, style.css
+
 
 ## User Manual
 *Once a person clones this into their computer how the person is supposed to run the program, add screenshots showing how your program works, also add here the link to the Youtube video showing the program running*
+Place file that includes all files in the requirements anywhere in your computer directory.
+Right click on index.html and select open with browser
+
 
 ## Reflection
 *Write the reflection about getting the small groups in the minimum number of iterations, etc.*
+
+The initial difficulty we had was selecting a language we were both comfortable with to start. We quickly decided between C++ and Javascript
+
+Then the next issue was to select a third party language that could work with the two languages we were willing to implement this project in.
+For Clion we were planning to use Boost and for JavaScript there was D3.js, graphlib, vis.js etc
+Steven was thinking of Boost and connecting it to clion and have the final project run on command line.
+Azhar was thinking of Javascript after initially failing to connect boost to clion. 
+JavaScript seemed to be the easiest to connect to a third party library after everything failed with Clion
+Azhar discovered vis.js as the easiest third-party library to use and focused on implementing graphs that take in different forms of data.
+Azhar worked on index.html file while Steven worked on script.js file. Azhar figured out different methods that could be exploited with vis.js to create a beginner reasonable graph that can be reference to.
+Steven then figured out how to parse any kind of data from the .txt fie into usable information by the graphing algorithm
+Steven as the most proficient in Java Script also used another third party library to sort the information he had parsed from the files and this library was called toposort.js. Steven was abe to using graphing algorithm that sorted all our arrays of data into objects and arrays that were usable in graphing format.
+We both worked together finally to merge index.html file graphing logic to script.js data and parsed information logic. 
+Steven also perfectly set up the UI to allow interaction between client and graphs.
+
+
 
 
 
