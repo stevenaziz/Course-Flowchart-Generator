@@ -22,6 +22,10 @@ input {
   margin: 10px 0;
 }
 
+.form-alert {
+  font: 16px arial red;
+}
+
 .graph-parent {
   width: 700px; /* set the width of the parent element */
   height: 200px; /* set the height of the parent element */

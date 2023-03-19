@@ -32,6 +32,8 @@ function processInput(e) {
     edgesArr.length = 0;
     idMap.clear();
 
+    
+
     // get form data
     userMaxCredits = inputMaxCredits.value;
     userStartQtr = document.querySelector('input[name="start-qtr"]:checked').value;
@@ -177,11 +179,8 @@ function createVisGraph(courseArr) {
     }
 
     var options = {
-        nodes: {
-            size: 1070
-        },
-        width: '1100px',
-        height: '1100px',
+        width: '100%',
+        height: '2000px',
         interaction: {
           zoomView: false
         },
