@@ -14,6 +14,7 @@ let currQtr = function(index, startQtr) { // anonymous function that uses startQ
 }
 
 // Selectors
+let graphContainer = document.getElementById('mynetwork');
 const inputFile = document.querySelector("#major-reqs");
 const inputMaxCredits = document.querySelector("#max-credits");
 const submitBtn = document.querySelector("#submit-btn");
@@ -68,7 +69,7 @@ function parseFile() {
             tempID = +(element.replace(/\D/g, ""));
             if (tempID != 0) {
                 array[index] = +(element.replace(/\D/g, ""));
-                currEdge = [currID, tempID]
+                currEdge = [tempID, currID]
                 edgesArr.push(currEdge);
             } else {
                 array.shift();
@@ -135,15 +136,102 @@ function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
 
         i++;
     }
-    return courseGroupsArr;
+    
+    let courseObjArrWGroups = [];
+    courseGroupsArr.forEach((qtrArr, qtrArrIdx) => {
+        qtrArr.forEach(course => {
+            course.group = qtrArrIdx;
+            courseObjArrWGroups.push(course);
+        });
+    });
+    return courseObjArrWGroups;
+}
+
+function createVisGraph(courseArr) {
+    let visObjects = [];
+    let visEdges = [];
+
+    // create visNodes
+    for (let i = 0; i < courseArr.length; i++) {
+        visObjects.push({
+            id: courseArr[i].id,
+            label: courseArr[i].code,
+            title: courseArr[i].name + "\n" + courseArr[i].credits,
+            group: courseArr[i].group, // how group graphs are created 
+            shape: "box"
+        });
+    }
+
+    // create visEdges
+    edgesArr.forEach(edge => {
+        visEdges.push({
+            from: edge[0],
+            to: edge[1]
+        });
+    });
+
+    var data = {
+        nodes: visObjects,
+        edges: visEdges
+        //groups: groups// group addition
+    }
+
+    var options = {
+        nodes: {
+            size: 1070
+        },
+        width: '1100px',
+        height: '1100px',
+        interaction: {
+          zoomView: false
+        },
+        layout: {
+            hierarchical: {
+                direction: "LR", // set the direction of the layout
+                sortMethod: "directed" // sort the nodes according to their position in the graph
+            }
+        },
+        // physics: {
+        //     barnesHut: {
+        //         gravitationalConstant: -2000,
+        //         centralGravity: 0.3,
+        //         springLength: 95,
+        //         springConstant: 0.04,
+        //         damping: 0.09,
+        //         avoidOverlap: 0
+        //     },
+        //     maxVelocity: 50,
+        //     minVelocity: 0.1,
+        //     solver: 'barnesHut'
+        // },
+        // groups: { // group design
+        //     useDefaultGroups: false,
+        //     font: {
+        //         color: '#fff',
+        //         size: 14,
+        //         face: 'arial',
+        //         strokeWidth: 0.5,
+        //         strokeColor: '#fff'
+        //     }
+        // }
+    };
+
+    let network = new vis.Network(graphContainer, data, options);
 }
 
 function main () {
     let sortedObjsArr = [];
 
-    toposort(idsArr, edgesArr).reverse().forEach(id => {
+    toposort(idsArr, edgesArr).forEach(id => {
         sortedObjsArr.push(idMap.get(id));
     });
 
-    console.log(createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr));
+    createVisGraph(createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr))
 }
+  
+   
+//   var groups = new vis.DataSet ([// group dataSet and content creator, where every group is arranged by color
+//     {id: 1, content: 'Fall'},
+//     {id: 2, content: 'Winter'},
+//     {id: 3, content: 'Spring'}
+//   ])

@@ -6,11 +6,11 @@
  * @returns {Array}
  */
 
-module.exports = function(edges) {
-  return toposort(uniqueNodes(edges), edges)
-}
+// module.exports = function(edges) {
+//   return toposort(uniqueNodes(edges), edges)
+// }
 
-module.exports.array = toposort
+// module.exports.array = toposort
 
 function toposort(nodes, edges) {
   var cursor = nodes.length
