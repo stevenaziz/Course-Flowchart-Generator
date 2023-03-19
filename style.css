@@ -23,7 +23,9 @@ input {
 }
 
 .form-alert {
-  font: 16px arial red;
+  padding: 10px 0px;
+  font: 16px arial;
+  color: red;
 }
 
 .graph-parent {

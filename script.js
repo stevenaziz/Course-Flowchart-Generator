@@ -18,6 +18,7 @@ let graphContainer = document.getElementById('mynetwork');
 const inputFile = document.querySelector("#major-reqs");
 const inputMaxCredits = document.querySelector("#max-credits");
 const submitBtn = document.querySelector("#submit-btn");
+const formAlert = document.querySelector(".form-alert");
 
 // Listeners
 submitBtn.addEventListener("click", processInput);
@@ -32,7 +33,21 @@ function processInput(e) {
     edgesArr.length = 0;
     idMap.clear();
 
+    try {
+        if (
+            isNaN(inputMaxCredits.value) || 
+            inputMaxCredits.value < 5 || 
+            document.querySelector('input[name="start-qtr"]:checked').value == null || 
+            inputFile.files[0] == undefined
+            ) {
+            throw new Error();
+        }
+    } catch {
+        formAlert.innerText = "Please check your input and try again.";
+        return;
+    }
     
+    formAlert.innerText = "";
 
     // get form data
     userMaxCredits = inputMaxCredits.value;
@@ -118,9 +133,9 @@ function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
         courseGroupsArr[i] = [];
         for (let j = 0; (j < sortedObjsArr.length) && (currQtrCreds < maxCredits); j++) {
             if (
-                (sortedObjsArr[j].avail.includes(currQtr(i, startQtr))) && // course available this qtr
+                (sortedObjsArr[j].avail.includes(currQtr(i, startQtr))) &&  // course available this qtr
                 (sortedObjsArr[j].prereqs.every(prereq => allSelectedCoursesArr.includes(prereq))) && // all prereqs met
-                ((currQtrCreds + sortedObjsArr[j].credits) <= maxCredits) // course won't cause quarter to exceed max credits
+                ((currQtrCreds + sortedObjsArr[j].credits) <= maxCredits)   // course won't cause quarter to exceed max credits
                 ) 
                 {
                 currSelectedCoursesArr.push(sortedObjsArr[j].id);   // add course to buffer array
@@ -149,6 +164,7 @@ function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
     return courseObjArrWGroups;
 }
 
+// creates the graph to be visaulized in memeory
 function createVisGraph(courseArr) {
     let visObjects = [];
     let visEdges = [];
@@ -159,7 +175,8 @@ function createVisGraph(courseArr) {
             id: courseArr[i].id,
             label: courseArr[i].code,
             title: courseArr[i].name + "\n" + courseArr[i].credits,
-            group: courseArr[i].group, // how group graphs are created 
+            level: courseArr[i].group, // how group graphs are created
+            group: courseArr[i].group%3,
             shape: "box"
         });
     }
@@ -172,23 +189,64 @@ function createVisGraph(courseArr) {
         });
     });
 
-    var data = {
+    // create groups for each quarter
+    let visGroups = new vis.DataSet([     // group dataSet and content creator, where every group is arranged by color
+        {id: 1, content: 'Fall'},
+        {id: 2, content: 'Winter'},
+        {id: 0, content: 'Spring'}
+    ]);
+
+    let data = {
         nodes: visObjects,
-        edges: visEdges
-        //groups: groups// group addition
+        edges: visEdges,
+        groups: visGroups
     }
 
-    var options = {
+    let options = {
+        nodes: {
+            font: {
+                size: 16,
+            },
+            scaling: {
+                min: 50,
+                max: 50,
+                label: {
+                    enabled: true,
+                    min: 100,
+                    max: 100,
+                },
+            },
+            widthConstraint: {
+                min: 30,
+                max: 30,
+            },
+            heightConstraint: {
+                min: 10,
+                max: 30,
+            },
+        },
+        edges: {
+            arrows: {
+                to: true,
+            },
+        },
         width: '100%',
-        height: '2000px',
+        height: '1000px',
         interaction: {
-          zoomView: false
+          zoomView: false,
         },
         layout: {
             hierarchical: {
+                enabled: true,
                 direction: "LR", // set the direction of the layout
-                sortMethod: "directed" // sort the nodes according to their position in the graph
-            }
+                sortMethod: "directed", // sort the nodes according to their position in the graph
+                nodeSpacing: 10,
+                levelSeparation: 200,
+                shakeTowards: 'roots',
+                edgeMinimization: true,
+                blockShifting: true,
+                treeSpacing: 10,
+            },
         },
         // physics: {
         //     barnesHut: {
@@ -225,12 +283,6 @@ function main () {
         sortedObjsArr.push(idMap.get(id));
     });
 
-    createVisGraph(createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr))
+    createVisGraph(createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr));
+    
 }
-  
-   
-//   var groups = new vis.DataSet ([// group dataSet and content creator, where every group is arranged by color
-//     {id: 1, content: 'Fall'},
-//     {id: 2, content: 'Winter'},
-//     {id: 3, content: 'Spring'}
-//   ])
