@@ -14,7 +14,10 @@ let currQtr = function(index, startQtr) { // anonymous function that uses startQ
 }
 
 // Selectors
-let GraphNoConstraints = document.getElementById('GraphNoConstraints');
+const GraphNoConstraints = document.getElementById('GraphNoConstraints');
+const GraphWithConstraints = document.getElementById('GraphWithConstraints');
+const ListNoConstraints = document.getElementById('ListNoConstraints');
+const ListWithConstraints = document.getElementById('ListWithConstraints');
 const inputFile = document.querySelector("#major-reqs");
 const inputMaxCredits = document.querySelector("#max-credits");
 const submitBtn = document.querySelector("#submit-btn");
@@ -153,19 +156,11 @@ function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
 
         i++;
     }
-    
-    let courseObjArrWGroups = [];
-    courseGroupsArr.forEach((qtrArr, qtrArrIdx) => {
-        qtrArr.forEach(course => {
-            course.group = qtrArrIdx;
-            courseObjArrWGroups.push(course);
-        });
-    });
-    return courseObjArrWGroups;
+    return courseGroupsArr;
 }
 
 // creates the graph to be visaulized in memeory
-function createVisGraph(courseArr,graphContainer) {
+function createVisGraph(courseArr, graphContainer) {
     let visObjects = [];
     let visEdges = [];
 
@@ -204,26 +199,24 @@ function createVisGraph(courseArr,graphContainer) {
 
     let options = {
         nodes: {
-            font: {
-                size: 16,
-            },
-            scaling: {
-                min: 50,
-                max: 50,
-                label: {
-                    enabled: true,
-                    min: 100,
-                    max: 100,
-                },
-            },
-            widthConstraint: {
-                min: 30,
-                max: 30,
-            },
-            heightConstraint: {
-                min: 10,
-                max: 30,
-            },
+            // font: {
+            //     size: 16,
+            // },
+            // scaling: {
+            //     min: 50,
+            //     max: 50,
+            //     label: {
+            //         enabled: true,
+            //     },
+            // },
+            // widthConstraint: {
+            //     min: 30,
+            //     max: 30,
+            // },
+            // heightConstraint: {
+            //     min: 10,
+            //     max: 30,
+            // },
         },
         edges: {
             arrows: {
@@ -237,7 +230,6 @@ function createVisGraph(courseArr,graphContainer) {
         },
         layout: {
             hierarchical: {
-                enabled: true,
                 direction: "LR", // set the direction of the layout
                 sortMethod: "directed", // sort the nodes according to their position in the graph
                 nodeSpacing: 10,
@@ -248,19 +240,19 @@ function createVisGraph(courseArr,graphContainer) {
                 treeSpacing: 10,
             },
         },
-        // physics: {
-        //     barnesHut: {
-        //         gravitationalConstant: -2000,
-        //         centralGravity: 0.3,
-        //         springLength: 95,
-        //         springConstant: 0.04,
-        //         damping: 0.09,
-        //         avoidOverlap: 0
-        //     },
-        //     maxVelocity: 50,
-        //     minVelocity: 0.1,
-        //     solver: 'barnesHut'
-        // },
+        physics: {
+            barnesHut: {
+                gravitationalConstant: -2000,
+                centralGravity: 0.3,
+                springLength: 95,
+                springConstant: 0.04,
+                damping: 0.09,
+                avoidOverlap: 0
+            },
+            maxVelocity: 50,
+            minVelocity: 0.1,
+            solver: 'barnesHut'
+        },
         // groups: { // group design
         //     useDefaultGroups: false,
         //     font: {
@@ -283,6 +275,50 @@ function main () {
         sortedObjsArr.push(idMap.get(id));
     });
 
-    createVisGraph(createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr), GraphNoConstraints);
+    let courseObjArrWGroups = function(arrayOfArrays) {
+        let tempArr = [];
+        arrayOfArrays.forEach((element, index) => {
+            element.forEach(courseObj => {
+                courseObj.group = index;
+                tempArr.push(courseObj);
+            });
+        });
+        return tempArr;
+    }
+
+
+
+    // without constraints
+    startQtr =  sortedObjsArr[0].avail[0];
+
+    let coursesByQtrArr = createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr); // array of arrays of objects
+
+    // coursesByQtrArr.forEach((qtrArr, qtrIdx) => {
+    //     qtrArr.forEach(courseObj => {
+    //         // use a variable to track this currQtr(qtrIdx, startQtr)
+    //         // use courseObj to print your OL list with li elements as courses
+    //     });
+    // });
     
+    createVisGraph(courseObjArrWGroups(coursesByQtrArr), GraphNoConstraints);
+
+
+
+    // with constraints
+    sortedObjsArr.length = 0;
+    
+    toposort(idsArr, edgesArr).forEach(id => {
+        sortedObjsArr.push(idMap.get(id));
+    });
+
+    coursesByQtrArr = createCourseGroups(userStartQtr, userMaxCredits, sortedObjsArr); // array of arrays of objects
+
+    // coursesByQtrArr.forEach((qtrArr, qtrIdx) => {
+    //     qtrArr.forEach(courseObj => {
+    //         // use a variable to track this currQtr(qtrIdx, userStartQtr)
+    //         // use courseObj to print your OL list with li elements as courses
+    //     });
+    // });
+
+    createVisGraph(courseObjArrWGroups(coursesByQtrArr), GraphWithConstraints);
 }
