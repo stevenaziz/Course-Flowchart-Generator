@@ -6,6 +6,12 @@ let userStartQtr;
 let courseObjArr = [];
 let idsArr = [];
 let edgesArr = [];
+let currQtr = function(index, startQtr) { // anonymous function that uses startQtr and array index to determine the current quarter
+    index += startQtr;
+    index %= 3;
+    if (index == 0) { return 3; }
+    return index;
+}
 
 // Selectors
 const inputFile = document.querySelector("#major-reqs");
@@ -99,23 +105,17 @@ function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
     }
 
     let courseGroupsArr = [];
-    let selectedCoursesArr = [];
+    let allSelectedCoursesArr = [];
+    let currSelectedCoursesArr = [];
     const numCourses = sortedObjsArr.length;
     let currQtrCreds = 0;
     let i = 0;
-    let currQtr = function(index) { // anonymous function that uses startQtr and array index to determine the current quarter
-        index += startQtr;
-        index %= 3;
-        if (index == 0) { return 3; }
-        return index;
-    }
-
-
-    while (selectedCoursesArr.length < numCourses) {
+    
+    while (allSelectedCoursesArr.length < numCourses) {
         courseGroupsArr[i] = [];
         for (let j = 0; (j < sortedObjsArr.length) && (currQtrCreds < maxCredits); j++) {
-            if (sortedObjsArr[j].avail.includes(currQtr(i)) && sortedObjsArr[j].prereqs.every(prereq => selectedCoursesArr.includes(prereq)) && ((currQtrCreds + sortedObjsArr[j].credits) <= maxCredits)) {
-                selectedCoursesArr.push(sortedObjsArr[j].id);
+            if ((sortedObjsArr[j].avail.includes(currQtr(i, startQtr))) && (sortedObjsArr[j].prereqs.every(prereq => allSelectedCoursesArr.includes(prereq))) && ((currQtrCreds + sortedObjsArr[j].credits) <= maxCredits)) {
+                currSelectedCoursesArr.push(sortedObjsArr[j].id);
                 currQtrCreds += sortedObjsArr[j].credits;
                 courseGroupsArr[i].push(sortedObjsArr[j]);
                 sortedObjsArr.splice(j, 1);
@@ -123,10 +123,14 @@ function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
             }
         }
 
+        allSelectedCoursesArr = allSelectedCoursesArr.concat(currSelectedCoursesArr);
+        
+        currSelectedCoursesArr.length = 0;
         currQtrCreds = 0;
+
         i++;
     }
-    console.log(courseGroupsArr);
+    return courseGroupsArr;
 }
 
 function main () {
@@ -136,5 +140,5 @@ function main () {
         sortedObjsArr.push(idMap.get(id));
     });
 
-    createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr);
+    console.log(createCourseGroups(0, Number.MAX_SAFE_INTEGER, sortedObjsArr));
 }
