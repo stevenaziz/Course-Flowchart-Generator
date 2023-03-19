@@ -101,25 +101,30 @@ function parseFile() {
 
 function createCourseGroups(startQtr, maxCredits, sortedObjsArr) {
     if (startQtr == 0) {
-        startQtr = sortedObjsArr[0].avail[0];
+        startQtr = sortedObjsArr[0].avail[0];   // if no start qtr is provided pick the earliest qtr
     }
 
-    let courseGroupsArr = [];
-    let allSelectedCoursesArr = [];
-    let currSelectedCoursesArr = [];
-    const numCourses = sortedObjsArr.length;
+    let courseGroupsArr = [];                   // final results array —— array of arrays
+    let allSelectedCoursesArr = [];             // array of all courses visisted
+    let currSelectedCoursesArr = [];            // array of courses being visited by selected qtr
+    const numCourses = sortedObjsArr.length;    // number of courses
     let currQtrCreds = 0;
     let i = 0;
     
     while (allSelectedCoursesArr.length < numCourses) {
         courseGroupsArr[i] = [];
         for (let j = 0; (j < sortedObjsArr.length) && (currQtrCreds < maxCredits); j++) {
-            if ((sortedObjsArr[j].avail.includes(currQtr(i, startQtr))) && (sortedObjsArr[j].prereqs.every(prereq => allSelectedCoursesArr.includes(prereq))) && ((currQtrCreds + sortedObjsArr[j].credits) <= maxCredits)) {
-                currSelectedCoursesArr.push(sortedObjsArr[j].id);
-                currQtrCreds += sortedObjsArr[j].credits;
-                courseGroupsArr[i].push(sortedObjsArr[j]);
-                sortedObjsArr.splice(j, 1);
-                j--;
+            if (
+                (sortedObjsArr[j].avail.includes(currQtr(i, startQtr))) && // course available this qtr
+                (sortedObjsArr[j].prereqs.every(prereq => allSelectedCoursesArr.includes(prereq))) && // all prereqs met
+                ((currQtrCreds + sortedObjsArr[j].credits) <= maxCredits) // course won't cause quarter to exceed max credits
+                ) 
+                {
+                currSelectedCoursesArr.push(sortedObjsArr[j].id);   // add course to buffer array
+                currQtrCreds += sortedObjsArr[j].credits;           // increment current qtr credits
+                courseGroupsArr[i].push(sortedObjsArr[j]);          // add course to final groups array
+                sortedObjsArr.splice(j, 1);                         // remove course from array being iterated
+                j--;                                                // decrement iterator since loop will increment it
             }
         }
 
