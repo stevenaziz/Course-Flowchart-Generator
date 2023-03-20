@@ -4,7 +4,7 @@ Authored by Steven Aziz and Azhar Kimanje
 ## Introduction
 For university students to graduate with a degree in a major of their choice, they must take (and pass) many courses related to their major. This can be daunting for new university admits since there needs to be more information on how they should plan their major requirements.
 
-Fortunately, we have a solution! Our course flowchart generator will accept a file of major requirements and the student's constraints (which quarter they started and how many credits they can take per quarter) to suggest an optimal course sequence. It works for any quarter-based university and can tell students everything they need to know about their journey in seconds!
+Fortunately, we have a solution! Our course flowchart generator will accept a file of major requirements and the student's constraints (the starting quarter and maximum credits the student can take per quarter) to suggest an optimal course sequence. It works for any quarter-based university and can tell students everything they need to know about their journey in seconds!
 
 ## Description
 To solve the problem, we used two third-party libraries (Toposort and vis.js) to design and execute a simple webpage that accepts three inputs and prints the optimal course flow. We built the project in HTML, CSS, and JavaScript using VS Code, and the entire project runs in a browser-based environment. Two test files, `SPU_Computer_Science_BA.txt` and `SPU_Computer_Engineering_BS.txt`, are provided to verify functionality and give a demonstration of how the course flowchart generator works.
