@@ -182,7 +182,7 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
         visObjects.push({
             id: courseArr[i].id,
             label: courseArr[i].code,
-            title: `${courseArr[i].name}, ${courseArr[i].credits}`,
+            title: `${courseArr[i].name}\n${courseArr[i].credits} credits`,
             level: courseArr[i].group,                                  // each level is one quarter
             group: courseArr[i].group%3,                                // each group is a collection of levels (Autumn/Winter/Spring)  
             shape: "box"
@@ -222,7 +222,7 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
                 direction: "LR",
                 sortMethod: "directed",
                 nodeSpacing: 50,
-                treeSpacing: 0,
+                treeSpacing: 50,
                 levelSeparation: 150,
                 shakeTowards: 'roots',
                 edgeMinimization: true,
