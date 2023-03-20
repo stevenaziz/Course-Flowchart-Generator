@@ -37,7 +37,7 @@ input {
   color: red;
 }
 
-div {
+#GraphNoConstraints, #GraphWithConstraints {
   height: 600px;
   border: 0.5px solid grey;  
 }

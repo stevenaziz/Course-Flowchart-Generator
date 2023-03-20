@@ -182,10 +182,10 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
         visObjects.push({
             id: courseArr[i].id,
             label: courseArr[i].code,
-            title: courseArr[i].name + "\n" + courseArr[i].credits,
+            title: `${courseArr[i].name}, ${courseArr[i].credits}`,
             level: courseArr[i].group,                                  // each level is one quarter
             group: courseArr[i].group%3,                                // each group is a collection of levels (Autumn/Winter/Spring)  
-            shape: "box",
+            shape: "box"
         });
     }
 
@@ -197,17 +197,9 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
         });
     });
 
-    // create groups for each quarter
-    let visGroups = new vis.DataSet([
-        {id: 1, content: 'Fall'},
-        {id: 2, content: 'Winter'},
-        {id: 0, content: 'Spring'}
-    ]);
-
     let data = {
         nodes: visObjects,
-        edges: visEdges,
-        groups: visGroups
+        edges: visEdges
     }
 
     let options = {
@@ -215,9 +207,6 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
         height: '600px',
         width: '100%',
         clickToUse: false,
-        nodes: {
-            chosen: true,
-        },
         edges: {
             arrows: {
                 to: true,
