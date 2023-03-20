@@ -10,13 +10,14 @@ Fortunately, we have a solution! Our course flowchart generator will accept a fi
 To solve the problem, we used two third-party libraries (Toposort and vis.js) to design and execute a simple webpage that accepts three inputs and prints the optimal course flow. We built the project in HTML, CSS, and JavaScript using VS Code, and the entire project runs in a browser-based environment. Two test files, `SPU_Computer_Science_BA.txt` and `SPU_Computer_Engineering_BS.txt`, are provided to verify functionality and give a demonstration of how the course flowchart generator works.
 
 ## Requirements
-- Up-to-date modern web browser (i.e., Safari, Chrome, Edge, Firefox, Opera, etc.)
+- Up-to-date, modern web browser (i.e., Safari, Chrome, Edge, Firefox, Opera, etc.)
 
-All required libraries and files are included in this repository.
+All required libraries and files are already included in this repository.
 
 ## User Manual
-1. Clone the repository on the target computer
+1. Clone the repository on the target computer and navigate to its directory in the file system
 2. Open `index.html` in the browser (usually by right-clicking)
+  - On Mac and Windows, this can be done by right-clicking the file, selecting _Open With_, and selecting a browser from the drop-down
 
 **IMPORTANT — all project files need to be in the same directory, or the program will not run**
 
