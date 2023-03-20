@@ -9,17 +9,13 @@ This project was designed on Visual Studio Code and runs as a webpage on a brows
 This project is about being able to use a third party library to implement a graphing algorithm and create a DAG that can help students plan how to take courses in Computer Science BA and Computer Engineering BS. The project utilizes vis.js and toposort.js to arrange and graph the information from the text file. We chose a Directed Acyclic Graph because it is reasonable and avoids cycles which means the student can only progress as they go through their studies in these majors. toposort.js is where the data from the .txt files was arranged topologically and script.js is where all the graphing logic and functions were implemented to success create the graph that you will see in your index.html file.
 
 ## Requirements
-- `SPU_Computer_Engineering_BS.txt` contains the courses a student needs to take to fulfill Computer Engineering BS major
-- `SPU_Computer_Science_BA.txt` contains the courses a student needs to take to fulfill Computer Science BA major
+- Modern web browser
 - `index.html`
 - `style.css`
 - `script.js`
 - `toposort.js`
 - `vis-network.js`
 - `vis-network.js.map`
-index.html is where the graphs and lists are printed out.
-script.js is where all the files get parsed, UI is implemented, graphing logic and listing logic are implemented.
-toposort.js does all the arranging of the information broken down by script.js happens.
 
 ## User Manual
 *Once a person clones this into their computer how the person is supposed to run the program, add screenshots showing how your program works, also add here the link to the Youtube video showing the program running*
@@ -28,7 +24,6 @@ Place file that includes all files in the requirements anywhere in your computer
 Right click on index.html and select open with browser
 
 Youtube Link: https://youtu.be/-s7s2OuCj10
-Paste in browser to see webpage in action
 
 ## Reflection
 *Write the reflection about getting the small groups in the minimum number of iterations, etc.*
