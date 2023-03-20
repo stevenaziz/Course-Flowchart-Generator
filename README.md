@@ -22,20 +22,17 @@ All required libraries and files are included in this repository.
 
 <img width="950" alt="Run the program by opening the index.html file in your browser" src="https://user-images.githubusercontent.com/90646854/226277263-4fb741b1-cee5-468a-ba8f-5e1d32a783c0.png">
 
-Youtube Link: https://youtu.be/-s7s2OuCj10
+Video Walkthrough of the Project: https://youtu.be/-s7s2OuCj10
 
 ## Reflection
-*Write the reflection about getting the small groups in the minimum number of iterations, etc.*
+The initial difficulty we had was selecting a language we were both comfortable with and a third-party graph library to use for the flowchart. We both knew C++ and Javascript, but for some odd reason we decided we would try C++, thinking it would be easier. We quickly discovered Boost is the most-popular third-party, open-source C++ graph library. We spent well over a week trying to install and use Boost but after nearly two weeks we gave up on Boost (and, by extension, C++) in favor of JavaScript. Azhar's research led to the discovery of vis.js, a simple, easy-to-use graph visualization library for JavaScript. And so we selected vis.js as our third-party library for this project.
 
-The initial difficulty we had was selecting a language we were both comfortable with to start. We quickly decided between C++ and Javascript
-Then the next issue was to select a third party language that could work with the two languages we were willing to implement this project in.
-For Clion we were planning to use Boost and for JavaScript there was D3.js, graphlib, vis.js etc
-Steven was thinking of Boost and connecting it to clion and have the final project run on command line.
-Azhar was thinking of Javascript after initially failing to connect boost to clion. 
-JavaScript seemed to be the easiest to connect to a third party library after everything failed with Clion
-Azhar discovered vis.js as the easiest third-party library to use and focused on implementing graphs that take in different forms of data.
-Azhar worked on index.html file while Steven worked on script.js file. Azhar figured out different methods that could be exploited with vis.js to create a beginner reasonable graph that can be reference to.
-Steven then figured out how to parse any kind of data from the .txt fie into usable information by the graphing algorithm
-Steven as the most proficient in Java Script also used another third party library to sort the information he had parsed from the files and this library was called toposort.js. Steven was abe to using graphing algorithm that sorted all our arrays of data into objects and arrays that were usable in graphing format.
-We both worked together finally to merge index.html file graphing logic to script.js data and parsed information logic. 
-Steven also perfectly set up the UI to allow interaction between client and graphs.
+Creating the HTML page and CSS was easy. The next challenge: implementing HTML forms that would accept the correct information and read that information into the script file. We learned about the FileReader JavaScript class and were happy to discover reading files in the browser was very easy.
+
+Afterwards, we spent a signifcant amount of time writing the ParseFile function to read the text file line by line and extract the information needed for the next step. We learned about JavaScript array manipulation, string methods, and objects. It was a lot of code but it wasn't anything beyond the difficulty of what we expected. All this time, Azhar had been implementing our usage of the vis.js APIs.
+
+The most-difficult piece of the project came next: writing the algorithm to select the courses and group them into the best quarters. This part easily took over 24 hours of work before we caught a break: we would iterate through an array of quarters (where each quarter was an array of classes) while at the same time iterating through a topoloigcally sorted arary of objects and pick the best classes to go into each quarter. This idea came to Steven in an epiphany moment after many, many hours of brainstorming and pacing. It was brillian!
+
+So we implemented the createCourseGroups function and completed the project by implementing a main function that would manage all the on-screen print and completing the HTML and graph styling.
+
+This project was a tremendous learning experience and it makes us proud to see our work doing useful things to make potential users' lives just a little easier. If only we had this when we started university!
