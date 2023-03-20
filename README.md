@@ -16,6 +16,7 @@ All required libraries and files are included in this repository.
 ## User Manual
 1. Clone the repository on the target computer
 2. Open `index.html` in the browser (usually by right-click)
+
 **IMPORTANT — All project files need to be in the same directory or the program will not run.**
 
 <img width="950" alt="Run the program by opening the index.html file in your browser" src="https://user-images.githubusercontent.com/90646854/226277263-4fb741b1-cee5-468a-ba8f-5e1d32a783c0.png">
