@@ -1,4 +1,4 @@
-# COURSE FLOWCHART GENERATOR
+# Course Flowchart Generator
 Authored by Steven Aziz and Azhar Kimanje
 
 ## Introduction
