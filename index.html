@@ -24,7 +24,7 @@
     <br>
     <li>
       The final format should look like the following<br>
-      EGR 2200, Engineering Probability & Stats, 3, [MAT 1235], [2, 3]
+      <b>EGR 2200, Engineering Probability & Stats, 3, [MAT 1235], [2, 3]</b>
     </li>
   </ul>
 
@@ -34,6 +34,7 @@
     <br>
     <label for="max-credits">Max Credits Per Quarter</label>
     <input type="number" name="max-credits" id="max-credits" min="5" step="1" placeholder="15" required>
+    <label for="max-credits">5 credits minimum</label>
     <br>
     <label>Starting Quarter</label>
     <br>
@@ -49,13 +50,13 @@
     <button type="submit" id="submit-btn">Submit</button>
   </form>
 
-  <p class="form-alert"></p>
+  <p class="form-alert display-none">Please check your input and try again.</p>
 
-  <h3 id="noConstraintsHdr" class="display-none">Without Constraints</h3>
+  <h4 id="noConstraintsHdr" class="display-none">Without Constraints</h4>
   <ol id="ListNoConstraints" class="display-none quarters"></ol>
   <div id="GraphNoConstraints" class="display-none"></div>
 
-  <h3 id="constraintsHdr" class="display-none">With Constraints</h3>
+  <h4 id="constraintsHdr" class="display-none">With Constraints</h4>
   <ol id="ListWithConstraints" class="display-none quarters"></ol>
   <div id="GraphWithConstraints" class="display-none"></div>
 

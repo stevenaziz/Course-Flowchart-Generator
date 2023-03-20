@@ -1,6 +1,7 @@
 // Global Variables
 let userMaxCredits;
 let userStartQtr;
+
 // anonymous function that uses startQtr and array index to determine the current quarter
 let currQtr = function(index, startQtr) {
     index += startQtr;
@@ -8,6 +9,7 @@ let currQtr = function(index, startQtr) {
     if (index == 0) { return 3; }
     return index;
 }
+
 
 // Selectors
 const noConstraintsHdr = document.querySelector("#noConstraintsHdr");
@@ -21,8 +23,10 @@ const inputMaxCredits = document.querySelector("#max-credits");
 const submitBtn = document.querySelector("#submit-btn");
 const formAlert = document.querySelector(".form-alert");
 
+
 // Listeners
 submitBtn.addEventListener("click", processInput);
+
 
 // Capture form data, read file, and call parsing function
 function processInput(e) {
@@ -41,11 +45,11 @@ function processInput(e) {
             throw new Error();
         }
     } catch {
-        formAlert.innerText = "Please check your input and try again.";
+        formAlert.classList.remove("display-none");
         return;
     }
     
-    formAlert.innerText = "";
+    formAlert.classList.add("display-none");
 
     // get form data
     userMaxCredits = inputMaxCredits.value;
@@ -58,7 +62,8 @@ function processInput(e) {
     });
 }
 
-// Parse data in fileInput and create multiple arrays of objects
+
+// Parse data, create array of course ID's, array of edges, and map of ID's to course objects; then, call main function
 function parseFile(fileInput) {
     let idsArr = [];
     let edgesArr = [];
@@ -100,7 +105,7 @@ function parseFile(fileInput) {
         courseAvailArr.forEach((element, index, array) => {
             temp = +(element.replace(/\D/g, ""));
             if ((temp != 1) && (temp != 2) && (temp != 3)) {
-                formAlert.innerText = "Please check your input and try again.";
+                formAlert.classList.remove("display-none");
                 return;
             }
             array[index] = temp;
@@ -117,7 +122,7 @@ function parseFile(fileInput) {
         };
 
         if (isNaN(currID) || currObj.credits < 1 || currObj.credits > 5) {
-            formAlert.innerText = "Please check your input and try again.";
+            formAlert.classList.remove("display-none");
             return;
         }
 
@@ -129,6 +134,8 @@ function parseFile(fileInput) {
     main(idsArr, edgesArr, idCourseMap);
 }
 
+
+// use start quarter, max credits, and topologically sorted array of objects to return array of arrays of objects
 function createCourseGroups(startQtr, maxCredits, sortedCoursesArr) {    
     let arrOfGroupsArr = [];                                        // final results array —— array of arrays
     let allSelectedCoursesArr = [];                                 // array of all courses visisted
@@ -164,7 +171,8 @@ function createCourseGroups(startQtr, maxCredits, sortedCoursesArr) {
     return arrOfGroupsArr;
 }
 
-// creates the graph to be visaulized in memeory
+
+// creates the graph to be visaulized in memeory and print it
 function createVisGraph(courseArr, edgesArr, graphContainer) {
     let visObjects = [];
     let visEdges = [];
@@ -175,9 +183,9 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
             id: courseArr[i].id,
             label: courseArr[i].code,
             title: courseArr[i].name + "\n" + courseArr[i].credits,
-            level: courseArr[i].group,                              // each level is one quarter
-            group: courseArr[i].group%3,                            // each group is a collection of levels (Autumn/Winter/Spring)  
-            shape: "box"
+            level: courseArr[i].group,                                  // each level is one quarter
+            group: courseArr[i].group%3,                                // each group is a collection of levels (Autumn/Winter/Spring)  
+            shape: "box",
         });
     }
 
@@ -203,76 +211,58 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
     }
 
     let options = {
+        autoResize: true,
+        height: '600px',
+        width: '100%',
+        clickToUse: false,
         nodes: {
-            // font: {
-            //     size: 16,
-            // },
-            // scaling: {
-            //     min: 50,
-            //     max: 50,
-            //     label: {
-            //         enabled: true,
-            //     },
-            // },
-            // widthConstraint: {
-            //     min: 30,
-            //     max: 30,
-            // },
-            // heightConstraint: {
-            //     min: 10,
-            //     max: 30,
-            // },
+            chosen: true,
         },
         edges: {
             arrows: {
                 to: true,
             },
         },
-        width: '100%',
-        height: '100%',
         interaction: {
-          zoomView: false,
+            zoomView: false,
+            dragView: false,
+            dragNodes: false,
         },
         layout: {
             hierarchical: {
-                direction: "LR", // set the direction of the layout
-                sortMethod: "directed", // sort the nodes according to their position in the graph
-                nodeSpacing: 10,
-                levelSeparation: 200,
+                direction: "LR",
+                sortMethod: "directed",
+                nodeSpacing: 50,
+                treeSpacing: 0,
+                levelSeparation: 150,
                 shakeTowards: 'roots',
                 edgeMinimization: true,
                 blockShifting: true,
-                treeSpacing: 10,
             },
         },
         physics: {
-            barnesHut: {
-                gravitationalConstant: -2000,
-                centralGravity: 0.3,
-                springLength: 95,
-                springConstant: 0.04,
-                damping: 0.09,
-                avoidOverlap: 0
-            },
-            maxVelocity: 50,
-            minVelocity: 0.1,
-            solver: 'barnesHut'
+            enabled: false,
+            // barnesHut: {
+            //     theta: 0.4,
+            //     gravitationalConstant: -1000,
+            //     centralGravity: 3,
+            //     springLength: 95,
+            //     springConstant: 0.04,
+            //     damping: 0.09,
+            //     avoidOverlap: 0,
+            // },
+            // maxVelocity: 50,
+            // minVelocity: 0.1,
+            // stabilization: true,
+            // solver: 'barnesHut',
         },
-        // groups: { // group design
-        //     useDefaultGroups: false,
-        //     font: {
-        //         color: '#fff',
-        //         size: 14,
-        //         face: 'arial',
-        //         strokeWidth: 0.5,
-        //         strokeColor: '#fff'
-        //     }
-        // }
     };
 
-    let network = new vis.Network(graphContainer, data, options);
+    new vis.Network(graphContainer, data, options);
 }
 
+
+// use form data to print lists and graphs with constraints and without constraints
 function main (idsArr, edgesArr, idCourseMap) {
     const sortedIdsArr = toposort(idsArr, edgesArr);
     let sortedCoursesArr = [];
@@ -284,6 +274,7 @@ function main (idsArr, edgesArr, idCourseMap) {
     qtrNumMap.set(2, "Winter");
     qtrNumMap.set(3, "Spring");
 
+    // converts an array or arrays of objects to an array of objects with group attributes
     let coursesWGroups = function(arrayOfArrays) {
         let coursesWGroupsArr = [];
         arrayOfArrays.forEach((element, index) => {
@@ -309,7 +300,7 @@ function main (idsArr, edgesArr, idCourseMap) {
         htmlOutput += `<li>${qtrNumMap.get(currQtr(qtrIdx, 1))}</li>`;
         htmlOutput += "<ol class='courses'>";
         qtr.forEach(course => {
-            htmlOutput += `<li>${course.code} ${course.name}, ${course.credits}</li>`;
+            htmlOutput += `<li>${course.code} ${course.name}, ${course.credits} credits</li>`;
         });
         htmlOutput += "</ol>";
     });
@@ -336,7 +327,7 @@ function main (idsArr, edgesArr, idCourseMap) {
         htmlOutput += `<li>${qtrNumMap.get(currQtr(qtrIdx, userStartQtr))}</li>`;
         htmlOutput += "<ol class='courses'>";
         qtr.forEach(course => {
-            htmlOutput += `<li>${course.code} ${course.name}, ${course.credits}</li>`;
+            htmlOutput += `<li>${course.code} ${course.name}, ${course.credits} credits</li>`;
         });
         htmlOutput += "</ol>";
     });

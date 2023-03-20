@@ -3,15 +3,20 @@
 }
 
 body {
-  padding: 2vmin;
+  padding: 2vmax;
+  margin: 0;
 }
 
 header {
   font: bold 32px arial;
 }
 
-h3 {
+h4 {
   font: bold 18px arial;
+}
+
+ul {
+  padding-left: 20px;
 }
 
 li {
@@ -33,6 +38,6 @@ input {
 }
 
 div {
-  min-height: 800px;
+  height: 600px;
   border: 0.5px solid grey;  
 }
