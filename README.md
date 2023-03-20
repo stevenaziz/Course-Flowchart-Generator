@@ -10,7 +10,7 @@ Fortunately, we have a solution! Our course flowchart generate will accept a fil
 To solve the probelm we used two third-party libraries (Toposort and vis.js) to design and execute a simple webpage that accept three inputs and prints the optimal course flow. We built the project in HTML, CSS, and JavaScript using VS Code and it runs in a browser environment. Two test files, `SPU_Computer_Science_BA.txt` and `SPU_Computer_Engineering_BS.txt`, are provided to verify functionality and provide a demonstration on how the course flowchart generator works.
 
 ## Requirements
-- Up-to-date modern web browser (i.e. Safari, Chrome, Edge, Firefox, Opera, etc.)
+- Up-to-date modern web browser (i.e. Safari, Chrome, Edge, Firefox, Opera, etc.)  
 All required libraries and files are included in this repository.
 
 ## User Manual
