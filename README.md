@@ -12,14 +12,15 @@ To solve the problem, we used two third-party libraries (Toposort and vis.js) to
 ## Requirements
 - Up-to-date, modern web browser (i.e., Safari, Chrome, Edge, Firefox, Opera, etc.)
 
-All required libraries and files are already included in this repository.
+> All required libraries and files are already included in this repository.
 
 ## User Manual
 1. Clone the repository on the target computer and navigate to its directory in the file system
 2. Open `index.html` in the browser (usually by right-clicking)
-  - On Mac and Windows, this can be done by right-clicking the file, selecting _Open With_, and selecting a browser from the drop-down
 
-**IMPORTANT — all project files need to be in the same directory, or the program will not run**
+> On Mac and Windows, this can be done by right-clicking the file, selecting _Open With_, and selecting a browser from the drop-down
+
+> **IMPORTANT — all project files need to be in the same directory, or the program will not run**
 
 <img width="950" alt="Run the program by opening the index.html file in your browser" src="https://user-images.githubusercontent.com/90646854/226277263-4fb741b1-cee5-468a-ba8f-5e1d32a783c0.png">
 
