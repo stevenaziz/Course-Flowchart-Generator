@@ -10,6 +10,8 @@ let currQtr = function(index, startQtr) {
 }
 
 // Selectors
+const noConstraintsHdr = document.querySelector("#noConstraintsHdr");
+const constraintsHdr = document.querySelector("#constraintsHdr");
 const GraphNoConstraints = document.getElementById('GraphNoConstraints');
 const GraphWithConstraints = document.getElementById('GraphWithConstraints');
 const ListNoConstraints = document.getElementById('ListNoConstraints');
@@ -60,7 +62,6 @@ function processInput(e) {
 function parseFile(fileInput) {
     let idsArr = [];
     let edgesArr = [];
-    let coursesArr = [];
     let idCourseMap = new Map();
 
     let inputFileLinesArr = fileInput.result.split(/\r?\n/);        // split by new line
@@ -122,11 +123,10 @@ function parseFile(fileInput) {
 
         idsArr.push(currID);
         idCourseMap.set(currID, currObj);
-        coursesArr.push(currObj);
     });
 
     // call main function to sort and print output
-    main([idsArr, edgesArr, coursesArr, idCourseMap]);
+    main(idsArr, edgesArr, idCourseMap);
 }
 
 function createCourseGroups(startQtr, maxCredits, sortedCoursesArr) {    
@@ -229,7 +229,7 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
             },
         },
         width: '100%',
-        height: '1000px',
+        height: '100%',
         interaction: {
           zoomView: false,
         },
@@ -273,10 +273,16 @@ function createVisGraph(courseArr, edgesArr, graphContainer) {
     let network = new vis.Network(graphContainer, data, options);
 }
 
-function main ([idsArr, edgesArr, coursesArr, idCourseMap]) {
+function main (idsArr, edgesArr, idCourseMap) {
     const sortedIdsArr = toposort(idsArr, edgesArr);
     let sortedCoursesArr = [];
     let arrsOfGroupsArr = [];
+    let htmlOutput = "";
+    let qtrNumMap = new Map();
+    
+    qtrNumMap.set(1, "Autumn");
+    qtrNumMap.set(2, "Winter");
+    qtrNumMap.set(3, "Spring");
 
     let coursesWGroups = function(arrayOfArrays) {
         let coursesWGroupsArr = [];
@@ -294,23 +300,29 @@ function main ([idsArr, edgesArr, coursesArr, idCourseMap]) {
     // without constraints    
     sortedIdsArr.forEach((id, index) => {
         sortedCoursesArr[index] = idCourseMap.get(id);
+        sortedCoursesArr[index].avail = [1, 2, 3];
     });
-    
-    startQtr = sortedCoursesArr[0].avail[0];
 
-    arrsOfGroupsArr = createCourseGroups(startQtr, Number.MAX_SAFE_INTEGER, sortedCoursesArr);
+    arrsOfGroupsArr = createCourseGroups(1, Number.MAX_SAFE_INTEGER, sortedCoursesArr);
 
-    //ListNoConstraints.classList.remove("display-none");
-    // coursesByQtrArr.forEach((qtrArr, qtrIdx) => {
-    //     qtrArr.forEach(courseObj => {
-    //         // use a variable to track this currQtr(qtrIdx, startQtr)
-    //         // use courseObj to print your OL list with li elements as courses
-    //     });
-    // });
+    arrsOfGroupsArr.forEach((qtr, qtrIdx) => {
+        htmlOutput += `<li>${qtrNumMap.get(currQtr(qtrIdx, 1))}</li>`;
+        htmlOutput += "<ol class='courses'>";
+        qtr.forEach(course => {
+            htmlOutput += `<li>${course.code} ${course.name}, ${course.credits}</li>`;
+        });
+        htmlOutput += "</ol>";
+    });
+
+    noConstraintsHdr.classList.remove("display-none");
+    ListNoConstraints.classList.remove("display-none");
+    ListNoConstraints.innerHTML = htmlOutput;
 
     GraphNoConstraints.classList.remove("display-none");
     createVisGraph(coursesWGroups(arrsOfGroupsArr), edgesArr, GraphNoConstraints);
 
+
+    htmlOutput = "";
 
 
     // with constraints
@@ -320,13 +332,18 @@ function main ([idsArr, edgesArr, coursesArr, idCourseMap]) {
 
     arrsOfGroupsArr = createCourseGroups(userStartQtr, userMaxCredits, sortedCoursesArr);
 
-    //ListWithConstraints.classList.remove("display-none");
-    // coursesByQtrArr.forEach((qtrArr, qtrIdx) => {
-    //     qtrArr.forEach(courseObj => {
-    //         // use a variable to track this currQtr(qtrIdx, userStartQtr)
-    //         // use courseObj to print your OL list with li elements as courses
-    //     });
-    // });
+    arrsOfGroupsArr.forEach((qtr, qtrIdx) => {
+        htmlOutput += `<li>${qtrNumMap.get(currQtr(qtrIdx, userStartQtr))}</li>`;
+        htmlOutput += "<ol class='courses'>";
+        qtr.forEach(course => {
+            htmlOutput += `<li>${course.code} ${course.name}, ${course.credits}</li>`;
+        });
+        htmlOutput += "</ol>";
+    });
+
+    constraintsHdr.classList.remove("display-none");
+    ListWithConstraints.classList.remove("display-none");
+    ListWithConstraints.innerHTML = htmlOutput;
 
     GraphWithConstraints.classList.remove("display-none");
     createVisGraph(coursesWGroups(arrsOfGroupsArr), edgesArr, GraphWithConstraints);

@@ -9,7 +9,7 @@
 
 <body>
   <header>Course Flowchart Generator</header>
-  <p>Please ensure that your selections meet the following criteria</p>
+  <h4>Please ensure that your selections meet the following criteria</h4>
 
   <ul>
     <li>The file must be a .txt</li>
@@ -51,9 +51,12 @@
 
   <p class="form-alert"></p>
 
-  <ol id="ListNoConstraints" class="display-none"></ol>
+  <h3 id="noConstraintsHdr" class="display-none">Without Constraints</h3>
+  <ol id="ListNoConstraints" class="display-none quarters"></ol>
   <div id="GraphNoConstraints" class="display-none"></div>
-  <ol id="ListWithConstraints" class="display-none"></ol>
+
+  <h3 id="constraintsHdr" class="display-none">With Constraints</h3>
+  <ol id="ListWithConstraints" class="display-none quarters"></ol>
   <div id="GraphWithConstraints" class="display-none"></div>
 
   <script src="toposort.js"></script>
