@@ -2,26 +2,22 @@
 Authored by Steven Aziz and Azhar Kimanje
 
 ## Introduction
-This programming project implementing a courseflow chart using the third party libraries toposort.js, vis-network.js and vis-network.js.map.
-This project was designed on Visual Studio Code and runs as a webpage on a browser environment. It will be able to successfully guide the user of the webpage to see through graduating requirements all the way from freshman year of college at SPU to senior year. There are two majors that we will be using to demonstrate all its features and these will be Computer Science BA and Computer Engineering BS. The user will be able to see flow charts with and without constraints and arranged lists of courses to guide them in successfully gaining from the using the webpage.
+In order for university students to graduate with a degree in a major of their choice they are required to take (and pass) a number of courses related to their major. For new university admits this can be really daunting since there is little to no informing on how they should plan their major requirements.
+
+Fortunately, we have a solution! Our course flowchart generate will accept a file of major requirements along with the student's constraints (which quarter they started and how many credits they can take per quarter) to suggest an optimal course sequence. It works for any quarter-based university and can tell students everything they need to know about their journey in seconds!
 
 ## Description
-This project is about being able to use a third party library to implement a graphing algorithm and create a DAG that can help students plan how to take courses in Computer Science BA and Computer Engineering BS. The project utilizes vis.js and toposort.js to arrange and graph the information from the text file. We chose a Directed Acyclic Graph because it is reasonable and avoids cycles which means the student can only progress as they go through their studies in these majors. toposort.js is where the data from the .txt files was arranged topologically and script.js is where all the graphing logic and functions were implemented to success create the graph that you will see in your index.html file.
+To solve the probelm we used two third-party libraries (Toposort and vis.js) to design and execute a simple webpage that accept three inputs and prints the optimal course flow. We built the project in HTML, CSS, and JavaScript using VS Code and it runs in a browser environment. Two test files, `SPU_Computer_Science_BA.txt` and `SPU_Computer_Engineering_BS.txt`, are provided to verify functionality and provide a demonstration on how the course flowchart generator works.
 
 ## Requirements
-- Modern web browser
-- `index.html`
-- `style.css`
-- `script.js`
-- `toposort.js`
-- `vis-network.js`
-- `vis-network.js.map`
+- Up-to-date modern web browser (i.e. Safari, Chrome, Edge, Firefox, Opera, etc.)
+All required libraries and files are included in this repository.
 
 ## User Manual
-*Once a person clones this into their computer how the person is supposed to run the program, add screenshots showing how your program works, also add here the link to the Youtube video showing the program running*
+1. Clone the repository on the target computer
+2. Open `index.html` in the browser (usually by right-click)
 
-Place file that includes all files in the requirements anywhere in your computer directory.
-Right click on index.html and select open with browser
+<img width="1000" alt="Run the program by opening the index.html file in your browser" src="https://user-images.githubusercontent.com/90646854/226276205-5428f661-1a2a-41bf-9714-ac5e097986ba.png">
 
 Youtube Link: https://youtu.be/-s7s2OuCj10
 
