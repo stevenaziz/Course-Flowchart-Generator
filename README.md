@@ -3,12 +3,12 @@
 You will need to include in this repository:
 - `SPU_Computer_Engineering_BS.txt` contains the courses a student needs to take to fulfill Computer Engineering BS major
 - `SPU_Computer_Science_BA.txt` contains the courses a student needs to take to fulfill Computer Science BA major
-//index.html
-//script.js
-//style.css
-//toposort.js
-//vis-network.js
-//vis-network.js.map
+- `index.html`
+- `style.css`
+- `script.js`
+- `toposort.js`
+- `vis-network.js`
+- `vis-network.js.map`
 
 
 # Creating a Flowchart from a Dependency List 
