@@ -27,7 +27,8 @@ toposort.js does all the arranging of the information broken down by script.js h
 Place file that includes all files in the requirements anywhere in your computer directory.
 Right click on index.html and select open with browser
 
-Youtube Link: 
+Youtube Link: https://youtu.be/-s7s2OuCj10
+Paste in browser to see webpage in action
 
 ## Reflection
 *Write the reflection about getting the small groups in the minimum number of iterations, etc.*
